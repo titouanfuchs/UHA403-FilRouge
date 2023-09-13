@@ -9,6 +9,18 @@ namespace printplan_api.Controllers;
 public class PlanController : ControllerBase
 {
     /// <summary>
+    /// Récupération de toutes les plannifications en base de données
+    /// </summary>
+    /// <returns>Toutes les Planifications en base de données</returns>
+    /// <response code="200">Retourne l'estimation d'impression à la chaine</response>
+    [HttpGet()]
+    [ProducesResponseType(typeof(PrintPlanDto),StatusCodes.Status200OK)]
+    public async Task<ActionResult<PrintPlanDto>> GetPlans()
+    {
+        return BadRequest(new BaseResponse() {Message = "Not Implemented"});
+    }
+    
+    /// <summary>
     /// Créer une planification d'impression
     /// </summary>
     /// <param name="input">DTO planification</param>
