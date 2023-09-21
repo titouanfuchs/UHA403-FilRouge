@@ -1,15 +1,14 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace printplan_api.Models.Core;
 
 public class Printer
 {
-    private string Name { get; set; }
-    private float PrinterSpeed { get; set; }
-    private float PreheatingDuration { get; set; }
+    [Key]
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public float PrinterSpeed { get; set; }
+    public float PreheatingDuration { get; set; }
 
-    public Printer(string name, float printerSpeed, float preheatingDuration)
-    {
-        Name = name;
-        PrinterSpeed = printerSpeed;
-        PreheatingDuration = preheatingDuration;
-    }
+    public Printer(){}
 }

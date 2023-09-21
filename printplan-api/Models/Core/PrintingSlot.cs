@@ -1,11 +1,14 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace printplan_api.Models.Core;
 
 public class PrintingSlot
 {
-    private int Id { get; set; }
-    private int Quantity { get; set; }
-    private object CurrentModel { get; set; }
-    private DateTime Date { get; set; }
+    [Key]
+    public int Id { get; set; }
+    public int Quantity { get; set; }
+    public PrintModel CurrentModel { get; set; }
+    public DateTime Date { get; set; }
     
     public PrintingSlot(){}
     

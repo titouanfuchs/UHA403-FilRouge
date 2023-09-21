@@ -41,7 +41,7 @@ public class PlanController : ControllerBase
     /// <param name="id">Identifiant de la planification à modifier</param>
     /// <param name="input">DTO planification</param>
     /// <returns>Estimation d'impression à la chaine</returns>
-    /// <response code="201">Retourne l'estimation d'impression à la chaine</response>
+    /// <response code="202">Retourne l'estimation d'impression à la chaine modifiée et à jour</response>
     /// <response code="400">Les données d'entrée sont incorrectes</response>
     /// <response code="404">La planification avec l'id fournis n'éxiste pas</response>
     [HttpPatch("{id}")]
