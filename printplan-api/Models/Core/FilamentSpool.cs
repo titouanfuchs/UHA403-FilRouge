@@ -5,11 +5,12 @@ namespace printplan_api.Models.Core;
 public class FilamentSpool
 {
     [Key]
-    private int Id { get; set; }
-    private string Name { get; set; }
-    private string Color { get; set; }
-    private int Lenght { get; set; }
-    private int Quantity { get; set; }
+    public int Id { get; set; }
+    
+    public string Name { get; set; }
+    public string Color { get; set; }
+    public int Lenght { get; set; }
+    public int Quantity { get; set; }
     
     public FilamentSpool(){}
 }
