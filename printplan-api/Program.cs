@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using printplan_api.Contexts;
+using printplan_api.Models.Core;
 using printplan_api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,6 +57,7 @@ using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<PrintPlanContext>();
     dataContext.Database.Migrate();
+    
 }
 
 app.Run();
