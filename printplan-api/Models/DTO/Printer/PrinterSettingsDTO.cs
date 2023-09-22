@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace printplan_api.Models.DTO.Printer;
 
 public struct PrinterSettingsDTO

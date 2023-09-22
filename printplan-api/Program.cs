@@ -2,12 +2,15 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using printplan_api.Contexts;
+using printplan_api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddTransient<PrinterService>();
 
 builder.Services.AddDbContext<PrintPlanContext>(options =>
 {
