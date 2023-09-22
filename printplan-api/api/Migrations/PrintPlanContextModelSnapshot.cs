@@ -90,6 +90,15 @@ namespace printplan_api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Printers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Default Printer",
+                            PreheatingDuration = 120f,
+                            PrinterSpeed = 10f
+                        });
                 });
 
             modelBuilder.Entity("printplan_api.Models.Core.PrintingSlot", b =>

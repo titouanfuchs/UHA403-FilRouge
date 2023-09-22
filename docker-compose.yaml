@@ -5,11 +5,11 @@ services:
         container_name: printplan-service
         build:
           dockerfile: Dockerfile
-          context: printplan-api
+          context: printplan-api/api
           target: ${TARGET}
         restart: on-failure
         volumes:
-            - ./printplan-api:/app
+            - ./printplan-api/api:/app
             - /app/bin
             - /app/obj
         depends_on:
