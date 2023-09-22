@@ -9,6 +9,8 @@ public class PrinterService
 {
     private PrintPlanContext _dataContext;
     
+    public PrinterService(){}
+    
     public PrinterService(PrintPlanContext dataContext)
     {
         _dataContext = dataContext;
@@ -20,14 +22,14 @@ public class PrinterService
 
         if (currentPrinter is null) throw new NullReferenceException($"Imprimante avec Id {printerId}, n'éxiste pas.");
 
-        await EditPrintingSpeedSettings(currentPrinter, inputData.PrinterSpeed);
+        EditPrintingSpeedSettings(currentPrinter, inputData.PrinterSpeed);
 
         await _dataContext.SaveChangesAsync();
         
         return inputData;
     }
 
-    private async Task<Printer> EditPrintingSpeedSettings(Printer currentPrinter, float printerSpeeed)
+    public static Printer EditPrintingSpeedSettings(Printer currentPrinter, float printerSpeeed)
     {
         if (printerSpeeed <= .0f)
             throw new ArgumentException("La vitesse ne peut pas être inférieure ou égale à 0");
