@@ -12,8 +12,7 @@ public class PrintPlanContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-
+        
         #region Printers
 
         modelBuilder.Entity<Printer>().HasData(new Printer()
