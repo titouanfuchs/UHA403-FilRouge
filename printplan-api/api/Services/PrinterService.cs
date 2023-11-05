@@ -22,11 +22,12 @@ public class PrinterService
 
         if (currentPrinter is null) throw new NullReferenceException($"Imprimante avec Id {printerId}, n'éxiste pas.");
 
-        EditPrintingSpeedSettings(currentPrinter, inputData.PrinterSpeed);
-
+        if (inputData.PrinterSpeed is not null) EditPrintingSpeedSettings(currentPrinter, (float)inputData.PrinterSpeed);
+        if (inputData.PreheatingDuration is not null) EditPrinterPreheatingDuration(currentPrinter, (float)inputData.PreheatingDuration);
+        
         await _dataContext.SaveChangesAsync();
         
-        return inputData;
+        return new PrinterSettingsDTO(currentPrinter);
     }
 
     public static Printer EditPrintingSpeedSettings(Printer currentPrinter, float printerSpeeed)
@@ -39,6 +40,19 @@ public class PrinterService
 
         currentPrinter.PrinterSpeed = printerSpeeed;
 
+        return currentPrinter;
+    }
+
+    public static Printer EditPrinterPreheatingDuration(Printer currentPrinter, float preheatingDuration)
+    {
+        if (preheatingDuration <= .0f)
+            throw new ArgumentException("La durée de préchauffage ne peut pas être inférieure ou égale a 0");
+        
+        if (preheatingDuration == currentPrinter.PreheatingDuration)
+            throw new Exception("Le paramètre de durée de préchauffage est identique à celui enregistré en base de données");
+
+        currentPrinter.PreheatingDuration = preheatingDuration;
+        
         return currentPrinter;
     }
 }
