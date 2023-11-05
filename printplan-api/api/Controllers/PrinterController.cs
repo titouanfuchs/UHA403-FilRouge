@@ -51,4 +51,5 @@ public class PrinterController : Controller
             return Ok(new BaseResponse() { Message = e.Message });
         }
     }
+    
 }
