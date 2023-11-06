@@ -2,7 +2,6 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using printplan_api.Contexts;
-using printplan_api.Models.Core;
 using printplan_api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +14,8 @@ builder.Services.AddTransient<PrinterService>();
 
 builder.Services.AddDbContext<PrintPlanContext>(options =>
 {
-    options.UseNpgsql($"Server=printplan-bdd;Port=5432;Username={Environment.GetEnvironmentVariable("POSTGRES_USER")};Database={Environment.GetEnvironmentVariable("DATABASE")};Password={Environment.GetEnvironmentVariable("POSTGRES_PASSWORD")}");
+    options.UseNpgsql(
+        $"Server=printplan-bdd;Port=5432;Username={Environment.GetEnvironmentVariable("POSTGRES_USER")};Database={Environment.GetEnvironmentVariable("DATABASE")};Password={Environment.GetEnvironmentVariable("POSTGRES_PASSWORD")}");
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -33,7 +33,7 @@ builder.Services.AddSwaggerGen(options =>
             Url = new Uri("https://portfolio.titouanfuchs.fr")
         }
     });
-    
+
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
@@ -57,7 +57,6 @@ using (var scope = app.Services.CreateScope())
 {
     var dataContext = scope.ServiceProvider.GetRequiredService<PrintPlanContext>();
     dataContext.Database.Migrate();
-    
 }
 
 app.Run();

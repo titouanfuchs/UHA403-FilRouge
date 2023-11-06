@@ -9,13 +9,18 @@ public class PrintPlanContext : DbContext
     {
     }
 
+    public DbSet<Printer> Printers { get; set; }
+    public DbSet<PrintModel> PrintModels { get; set; }
+    public DbSet<PrintingSlot> PrintingSlots { get; set; }
+    public DbSet<FilamentSpool> FilamentSpools { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
+
         #region Printers
 
-        modelBuilder.Entity<Printer>().HasData(new Printer()
+        modelBuilder.Entity<Printer>().HasData(new Printer
         {
             Id = 1,
             Name = "Default Printer",
@@ -24,12 +29,5 @@ public class PrintPlanContext : DbContext
         });
 
         #endregion
-
     }
-
-    public DbSet<Printer> Printers { get; set; }
-    public DbSet<PrintModel> PrintModels{ get; set; }
-    public DbSet<PrintingSlot> PrintingSlots{ get; set; }
-    public DbSet<FilamentSpool> FilamentSpools{ get; set; }
-    
 }

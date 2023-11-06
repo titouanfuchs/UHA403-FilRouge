@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using printplan_api.Contexts;
 using printplan_api.Models.Core;
 using printplan_api.Models.DTO.Printer;
@@ -7,26 +6,30 @@ namespace printplan_api.Services;
 
 public class PrinterService
 {
-    private PrintPlanContext _dataContext;
-    
-    public PrinterService(){}
-    
+    private readonly PrintPlanContext _dataContext;
+
+    public PrinterService()
+    {
+    }
+
     public PrinterService(PrintPlanContext dataContext)
     {
         _dataContext = dataContext;
     }
 
-    public async Task<PrinterSettingsDTO> PatchSettings(int printerId,PrinterSettingsDTO inputData)
+    public async Task<PrinterSettingsDTO> PatchSettings(int printerId, PrinterSettingsDTO inputData)
     {
-        Printer? currentPrinter = _dataContext.Printers.FirstOrDefault(p => p.Id == printerId);
+        var currentPrinter = _dataContext.Printers.FirstOrDefault(p => p.Id == printerId);
 
         if (currentPrinter is null) throw new NullReferenceException($"Imprimante avec Id {printerId}, n'éxiste pas.");
 
-        if (inputData.PrinterSpeed is not null) EditPrintingSpeedSettings(currentPrinter, (float)inputData.PrinterSpeed);
-        if (inputData.PreheatingDuration is not null) EditPrinterPreheatingDuration(currentPrinter, (float)inputData.PreheatingDuration);
-        
+        if (inputData.PrinterSpeed is not null)
+            EditPrintingSpeedSettings(currentPrinter, (float)inputData.PrinterSpeed);
+        if (inputData.PreheatingDuration is not null)
+            EditPrinterPreheatingDuration(currentPrinter, (float)inputData.PreheatingDuration);
+
         await _dataContext.SaveChangesAsync();
-        
+
         return new PrinterSettingsDTO(currentPrinter);
     }
 
@@ -47,12 +50,13 @@ public class PrinterService
     {
         if (preheatingDuration <= .0f)
             throw new ArgumentException("La durée de préchauffage ne peut pas être inférieure ou égale a 0");
-        
+
         if (preheatingDuration == currentPrinter.PreheatingDuration)
-            throw new Exception("Le paramètre de durée de préchauffage est identique à celui enregistré en base de données");
+            throw new Exception(
+                "Le paramètre de durée de préchauffage est identique à celui enregistré en base de données");
 
         currentPrinter.PreheatingDuration = preheatingDuration;
-        
+
         return currentPrinter;
     }
 }
