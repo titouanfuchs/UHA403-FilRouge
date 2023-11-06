@@ -11,13 +11,14 @@ namespace printplan_api.Controllers;
 public class PrinterController : Controller
 {
     private readonly PrinterService _printerService;
+
     public PrinterController(PrinterService printerService)
     {
         _printerService = printerService;
     }
-    
+
     /// <summary>
-    /// Modifier les paramètres d'une imprimante 3D
+    ///     Modifier les paramètres d'une imprimante 3D
     /// </summary>
     /// <param name="id">Identifiant de la planification à modifier</param>
     /// <param name="input">Paramètres de l'imprimante</param>
@@ -26,8 +27,8 @@ public class PrinterController : Controller
     /// <response code="400">Les données d'entrée sont incorrectes</response>
     /// <response code="404">L'imprimante avec l'id fournis n'éxiste pas</response>
     [HttpPatch("{id}")]
-    [ProducesResponseType(typeof(PrinterSettingsDTO),StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(PrinterSettingsDTO),StatusCodes.Status202Accepted)]
+    [ProducesResponseType(typeof(PrinterSettingsDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PrinterSettingsDTO), StatusCodes.Status202Accepted)]
     [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ChangePrinterSettings(int id, PrinterSettingsDTO input)
@@ -39,17 +40,15 @@ public class PrinterController : Controller
         }
         catch (NullReferenceException ne)
         {
-            return NotFound(new BaseResponse() { Message = ne.Message });
-
+            return NotFound(new BaseResponse { Message = ne.Message });
         }
         catch (ArgumentException ae)
         {
-            return BadRequest(new BaseResponse() { Message = ae.Message });
+            return BadRequest(new BaseResponse { Message = ae.Message });
         }
         catch (Exception e)
         {
-            return Ok(new BaseResponse() { Message = e.Message });
+            return Ok(new BaseResponse { Message = e.Message });
         }
     }
-    
 }
