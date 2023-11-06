@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddTransient<PrinterService>();
+builder.Services.AddTransient<PlanService>();
 
 builder.Services.AddDbContext<PrintPlanContext>(options =>
 {
