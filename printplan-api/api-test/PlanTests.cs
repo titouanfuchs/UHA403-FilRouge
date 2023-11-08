@@ -128,6 +128,9 @@ public class PlanTests
         Assert.That(result.SpoolReplacementEvents.Count, Is.EqualTo(1).Within(0));
     }
 
+    /// <summary>
+    /// L'utilisateur veut imprimer X modèle Y fois et possède la quantité de fil d'impression nécéssaire, mais dois remplacer la bobine une ou plusieurs fois
+    /// </summary>
     [Test]
     public void Hyp2_ReplaceSpoolDuringPrinting()
     {
@@ -135,7 +138,7 @@ public class PlanTests
         {
             new FilamentSpool()
             {
-                Name = "Filament classique",
+                Name = "Filament classique court",
                 Lenght = 200,
                 Color = "Black",
                 Id = 1,
@@ -143,7 +146,7 @@ public class PlanTests
             },
             new FilamentSpool()
             {
-                Name = "Filament classique",
+                Name = "Filament classique long",
                 Lenght = 1000,
                 Color = "Black",
                 Id = 2,
@@ -171,5 +174,103 @@ public class PlanTests
         PrintPlanDto result = service.Plan(postQuery);
         
         Assert.That(result.SpoolReplacementEvents.Count, Is.EqualTo(2).Within(0));
+    }
+
+    /// <summary>
+    /// L'utilisateur veut imprimer X modèle Y fois et ne possède pas assez de fil d'impression pour effectuer la quantité voulue
+    /// </summary>
+    [Test]
+    public void Hyp3_NotEnoughFilamentToFullyPrint()
+    {
+        var spools = new List<FilamentSpool>
+        {
+            new FilamentSpool()
+            {
+                Name = "Filament classique court",
+                Lenght = 1500,
+                Color = "Black",
+                Id = 1,
+                Quantity = 1
+            }
+        }.AsQueryable();
+
+        var spoolsSet = new Mock<DbSet<FilamentSpool>>();
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.Provider).Returns(spools.Provider);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.Expression).Returns(spools.Expression);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.ElementType).Returns(spools.ElementType);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.GetEnumerator()).Returns(() => spools.GetEnumerator());
+        
+        _mockContext.Setup(c => c.FilamentSpools).Returns(spoolsSet.Object);
+        
+        PlanService service = MockPlanService();
+
+        PostPrintPlanDto postQuery = new PostPrintPlanDto()
+        {
+            PrinterId = 1,
+            PrintModelId = 1,
+            Quantity = 4
+        };
+        
+        PrintPlanDto result = service.Plan(postQuery);
+        
+        Assert.Less(result.PrintQuantity, result.InitialPrintQuantity);
+    }
+
+    /// <summary>
+    ///  L'utilisateur veut imprimer X modèle Y fois et ne possède pas assez de fil d'impression et il y a un ou plusieurs changement de bobine en cours d'impression
+    /// </summary>
+    [Test]
+    public void Hyp4_NotEnoughFilamentToFullyPrintAndNeedToChangeSpool()
+    {
+        var spools = new List<FilamentSpool>
+        {
+            new FilamentSpool()
+            {
+                Name = "Filament classique court",
+                Lenght = 500,
+                Color = "Black",
+                Id = 1,
+                Quantity = 1
+            },
+            new FilamentSpool()
+            {
+                Name = "Filament classique court",
+                Lenght = 500,
+                Color = "Black",
+                Id = 1,
+                Quantity = 1
+            },
+            new FilamentSpool()
+            {
+                Name = "Filament classique court",
+                Lenght = 500,
+                Color = "Black",
+                Id = 1,
+                Quantity = 1
+            },
+        }.AsQueryable();
+
+        var spoolsSet = new Mock<DbSet<FilamentSpool>>();
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.Provider).Returns(spools.Provider);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.Expression).Returns(spools.Expression);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.ElementType).Returns(spools.ElementType);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.GetEnumerator()).Returns(() => spools.GetEnumerator());
+        
+        _mockContext.Setup(c => c.FilamentSpools).Returns(spoolsSet.Object);
+        
+        PlanService service = MockPlanService();
+
+        PostPrintPlanDto postQuery = new PostPrintPlanDto()
+        {
+            PrinterId = 1,
+            PrintModelId = 1,
+            Quantity = 4
+        };
+        
+        PrintPlanDto result = service.Plan(postQuery);
+        
+        if (result.PrintQuantity < result.InitialPrintQuantity && result.SpoolReplacementEvents.Count > 1) Assert.Pass();
+        
+        Assert.Fail();
     }
 }
