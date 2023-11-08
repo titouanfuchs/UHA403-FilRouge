@@ -10,14 +10,24 @@ public struct PrintPlanDto
     public List<FilamentReplacementEvent> SpoolReplacementEvents { get; set; } = new();
 
     /// <summary>
+    ///     Quantité initiale à imprimer
+    /// </summary>
+    public int InitialPrintQuantity { get; set; }
+    
+    /// <summary>
+    ///     Quantité finale à imprimer
+    /// </summary>
+    public int PrintQuantity { get; set; }
+    
+    /// <summary>
     ///     Durée totale d'impression
     /// </summary>
-    public int TotalDuration { get; set; }
+    public TimeSpan TotalDuration { get; set; }
 
     /// <summary>
     ///     Durée d'impression d'une unité du modèle
     /// </summary>
-    public int UnitDuration { get; set; }
+    public TimeSpan UnitDuration { get; set; }
 
     /// <summary>
     ///     Quantité de bobines de fil nécéssaire à l'impression

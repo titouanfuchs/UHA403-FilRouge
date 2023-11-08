@@ -2,5 +2,7 @@ namespace printplan_api.Models.Core;
 
 public struct FilamentReplacementEvent
 {
-    public DateTime ReplacementDate { get; set; }
+    public TimeSpan ReplacementDate { get; set; }
+    
+    public int SpoolId { get; set; }
 }

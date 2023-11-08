@@ -42,8 +42,7 @@ public class PlanController : ControllerBase
     public ActionResult<PrintPlanDto> Plan(PostPrintPlanDto input)
     {
         PrintPlanDto result = _planService.Plan(input);
-        var response = new PlanResponse() { Message = "Planification crée avec succès", Plan = result };
-        return StatusCode(201, response);
+        return StatusCode(201, result);
     }
 
     /// <summary>

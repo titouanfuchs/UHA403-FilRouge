@@ -27,6 +27,48 @@ public class PrintPlanContext : DbContext
             PreheatingDuration = 120f,
             PrinterSpeed = 10f
         });
+        
+        modelBuilder.Entity<PrintModel>().HasData(new PrintModel()
+        {
+            Id = 1,
+            Name = "Petit model",
+            RequiredFilamentLenght = 5f
+        });
+        
+        modelBuilder.Entity<PrintModel>().HasData(new PrintModel()
+        {
+            Id = 2,
+            Name = "Moyen model",
+            RequiredFilamentLenght = 10f
+        });
+        
+        modelBuilder.Entity<PrintModel>().HasData(new PrintModel()
+        {
+            Id = 3,
+            Name = "Grand model",
+            RequiredFilamentLenght = 30f
+        });
+        
+        modelBuilder.Entity<PrintModel>().HasData(new PrintModel()
+        {
+            Id = 4,
+            Name = "Gargantua",
+            RequiredFilamentLenght = 1000f
+        });
+
+        Random rnd = new Random();
+        
+        for (int i = 0; i < 10; i++)
+        {
+            modelBuilder.Entity<FilamentSpool>().HasData(new FilamentSpool()
+            {
+                Id = i + 1,
+                Name = $"Bobine_{i}",
+                Lenght = rnd.Next(100, 1000),
+                Color = "Black",
+                Quantity = rnd.Next(1, 10)
+            });
+        }
 
         #endregion
     }
