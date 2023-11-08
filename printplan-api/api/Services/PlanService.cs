@@ -49,8 +49,6 @@ public class PlanService
         {
             case FilamentStatus.Ok:
                 _logger.LogInformation("Filament quantity is Fine");
-                printDuration = CalcPrintingDuration(eval.Required, currentPrinter.PrinterSpeed, currentPrinter.PreheatingDuration);
-                replacementEvents = CalcSpoolsReplacements(currentPrinter.PrinterSpeed, currentPrinter.PreheatingDuration,eval.Required, currentSpools);
                 break;
             
             default:
@@ -63,11 +61,12 @@ public class PlanService
                         $"Il n'y a pas assez de fil disponible pour imprimer {input.Quantity} {currentModel.Name}");
 
                 printableQty = (int)MathF.Floor(input.Quantity * share);
-                float finalLenght = currentModel.RequiredFilamentLenght * printableQty;
-                printDuration = CalcPrintingDuration(finalLenght, currentPrinter.PrinterSpeed, currentPrinter.PreheatingDuration);
-                replacementEvents = CalcSpoolsReplacements(currentPrinter.PrinterSpeed, currentPrinter.PreheatingDuration,finalLenght, currentSpools);
+                eval.Required = currentModel.RequiredFilamentLenght * printableQty;
                 break;
         }
+        
+        printDuration = CalcPrintingDuration(eval.Required, currentPrinter.PrinterSpeed, currentPrinter.PreheatingDuration);
+        replacementEvents = CalcSpoolsReplacements(currentPrinter.PrinterSpeed, currentPrinter.PreheatingDuration,eval.Required, currentSpools);
 
         PrintingSlot printingSlot = new PrintingSlot()
         {
@@ -84,7 +83,8 @@ public class PlanService
             PrintQuantity = printableQty,
             TotalDuration = printDuration,
             UnitDuration = printDuration / printableQty,
-            RequiredSpoolQuantity = replacementEvents.Count
+            RequiredSpoolQuantity = replacementEvents.Count,
+            RequiredFilamentLenght = eval.Required
         };
     }
 

@@ -34,6 +34,11 @@ public struct PrintPlanDto
     /// </summary>
     public int RequiredSpoolQuantity { get; set; }
 
+    /// <summary>
+    /// Quantité de fil nécéssair au total
+    /// </summary>
+    public float RequiredFilamentLenght { get; set; }
+    
     public PrintPlanDto()
     {
     }

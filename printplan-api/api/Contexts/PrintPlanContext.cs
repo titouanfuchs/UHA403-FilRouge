@@ -5,14 +5,16 @@ namespace printplan_api.Contexts;
 
 public class PrintPlanContext : DbContext
 {
+    public PrintPlanContext(){}
+    
     public PrintPlanContext(DbContextOptions<PrintPlanContext> options) : base(options)
     {
     }
 
-    public DbSet<Printer> Printers { get; set; }
-    public DbSet<PrintModel> PrintModels { get; set; }
-    public DbSet<PrintingSlot> PrintingSlots { get; set; }
-    public DbSet<FilamentSpool> FilamentSpools { get; set; }
+    public virtual DbSet<Printer> Printers { get; set; }
+    public virtual DbSet<PrintModel> PrintModels { get; set; }
+    public virtual DbSet<PrintingSlot> PrintingSlots { get; set; }
+    public virtual DbSet<FilamentSpool> FilamentSpools { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
