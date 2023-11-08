@@ -149,7 +149,6 @@ public class PlanService
 
         foreach (FilamentSpool spool in spools)
         {
-            if (remainingLenght <= 0) break;
             for (int i = 0; i < spool.Quantity; i++)
             {
                 FilamentReplacementEvent lastEvent = events.LastOrDefault(new FilamentReplacementEvent() { ReplacementDate = new TimeSpan() });
@@ -161,6 +160,7 @@ public class PlanService
 
                 remainingLenght -= spool.Lenght;   
                 
+                if (remainingLenght <= 0) return events;
                 if (spool.Lenght >= remainingLenght) return events;
             }
         }

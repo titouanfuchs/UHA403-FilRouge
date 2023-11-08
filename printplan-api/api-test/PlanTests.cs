@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using printplan_api.Contexts;
 using printplan_api.Models.Core;
+using printplan_api.Models.DTO;
 using printplan_api.Services;
 
 namespace api_test;
@@ -19,6 +20,7 @@ public class PlanTests
         {
             new Printer()
             {
+                Id = 1,
                 Name = "Test Printer",
                 PreheatingDuration = 120f,
                 PrinterSpeed = .1f
@@ -86,6 +88,9 @@ public class PlanTests
         return new PlanService(_mockContext.Object, _mockLogger.Object);
     }
     
+    /// <summary>
+    ///  L'utilisateur veut imprimer X modèle Y fois et possède la quantité de fil d'impression nécéssaire pour effectuer l'impression d'une seule traite
+    /// </summary>
     [Test]
     public void Hyp1_RequestIsPrintable()
     {
@@ -110,7 +115,16 @@ public class PlanTests
         _mockContext.Setup(c => c.FilamentSpools).Returns(spoolsSet.Object);
         
         PlanService service = MockPlanService();
+
+        PostPrintPlanDto postQuery = new PostPrintPlanDto()
+        {
+            PrinterId = 1,
+            PrintModelId = 1,
+            Quantity = 2
+        };
+
+        PrintPlanDto result = service.Plan(postQuery);
         
-        Assert.Pass();
+        Assert.That(result.SpoolReplacementEvents.Count, Is.EqualTo(2).Within(0));
     }
 }
