@@ -147,6 +147,8 @@ public class PlanService
             SpoolId = firstSpool.Id
         });
 
+        if (remainingLenght <= 0) return events;
+        
         foreach (FilamentSpool spool in spools)
         {
             for (int i = 0; i < spool.Quantity; i++)

@@ -120,9 +120,54 @@ public class PlanTests
         {
             PrinterId = 1,
             PrintModelId = 1,
-            Quantity = 2
+            Quantity = 1
         };
 
+        PrintPlanDto result = service.Plan(postQuery);
+        
+        Assert.That(result.SpoolReplacementEvents.Count, Is.EqualTo(1).Within(0));
+    }
+
+    [Test]
+    public void Hyp2_ReplaceSpoolDuringPrinting()
+    {
+        var spools = new List<FilamentSpool>
+        {
+            new FilamentSpool()
+            {
+                Name = "Filament classique",
+                Lenght = 200,
+                Color = "Black",
+                Id = 1,
+                Quantity = 1
+            },
+            new FilamentSpool()
+            {
+                Name = "Filament classique",
+                Lenght = 1000,
+                Color = "Black",
+                Id = 2,
+                Quantity = 1
+            }
+        }.AsQueryable();
+
+        var spoolsSet = new Mock<DbSet<FilamentSpool>>();
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.Provider).Returns(spools.Provider);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.Expression).Returns(spools.Expression);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.ElementType).Returns(spools.ElementType);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.GetEnumerator()).Returns(() => spools.GetEnumerator());
+        
+        _mockContext.Setup(c => c.FilamentSpools).Returns(spoolsSet.Object);
+        
+        PlanService service = MockPlanService();
+
+        PostPrintPlanDto postQuery = new PostPrintPlanDto()
+        {
+            PrinterId = 1,
+            PrintModelId = 1,
+            Quantity = 1
+        };
+        
         PrintPlanDto result = service.Plan(postQuery);
         
         Assert.That(result.SpoolReplacementEvents.Count, Is.EqualTo(2).Within(0));
