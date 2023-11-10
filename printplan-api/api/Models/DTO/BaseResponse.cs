@@ -1,6 +1,6 @@
 namespace printplan_api.Models.DTO;
 
-public struct BaseResponse
+public class BaseResponse
 {
     public BaseResponse()
     {

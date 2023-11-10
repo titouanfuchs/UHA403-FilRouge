@@ -1,5 +1,7 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using printplan_api.Models.DTO;
+using printplan_api.Services;
 
 namespace printplan_api.Controllers;
 
@@ -8,6 +10,13 @@ namespace printplan_api.Controllers;
 [Produces("application/json")]
 public class PlanController : ControllerBase
 {
+    private readonly PlanService _planService;
+
+    public PlanController(PlanService planService)
+    {
+        _planService = planService;
+    }
+    
     /// <summary>
     ///     Récupération de toutes les plannifications en base de données
     /// </summary>
@@ -30,9 +39,10 @@ public class PlanController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(PrintPlanDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<PrintPlanDto>> Plan(PostPrintPlanDto input)
+    public ActionResult<PrintPlanDto> Plan(PostPrintPlanDto input)
     {
-        return BadRequest(new BaseResponse { Message = "Not Implemented" });
+        PrintPlanDto result = _planService.Plan(input);
+        return StatusCode(201, result);
     }
 
     /// <summary>

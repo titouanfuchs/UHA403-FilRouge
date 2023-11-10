@@ -8,5 +8,4 @@ public class PrintingSlot
 
     public int Quantity { get; set; }
     public PrintModel CurrentModel { get; set; }
-    public DateTime Date { get; set; }
 }

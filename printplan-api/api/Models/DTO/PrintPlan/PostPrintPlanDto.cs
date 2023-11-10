@@ -5,6 +5,12 @@ namespace printplan_api.Models.DTO;
 public struct PostPrintPlanDto
 {
     /// <summary>
+    /// Id de l'imprimante qui devra réaliser l'impression
+    /// </summary>
+    [Required] 
+    public int PrinterId { get; set; } = 0;
+    
+    /// <summary>
     ///     Quantité de modèle à imprimer
     /// </summary>
     [Required]
