@@ -276,6 +276,9 @@ public class PlanTests
         Assert.Fail();
     }
 
+    /// <summary>
+    /// L'utilisateur veut lancer une impression sans avoir d'imprimantes de renseignée en base de données
+    /// </summary>
     [Test]
     public void Hyp5_NoPrinter()
     {
@@ -322,6 +325,85 @@ public class PlanTests
             service.Plan(postQuery);
         }
         catch (PrinterNotFoundException printerNotFoundException)
+        {
+            Assert.Pass();
+        }
+        
+        Assert.Fail();
+    }
+    
+    //L'utilisateur veut imprimer sans avoir de bobines de fil en stock
+    [Test]
+    public void Hyp6_NoSpool()
+    {
+        var spools = new List<FilamentSpool>().AsQueryable();
+
+        var spoolsSet = new Mock<DbSet<FilamentSpool>>();
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.Provider).Returns(spools.Provider);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.Expression).Returns(spools.Expression);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.ElementType).Returns(spools.ElementType);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.GetEnumerator()).Returns(() => spools.GetEnumerator());
+        
+        _mockContext.Setup(c => c.FilamentSpools).Returns(spoolsSet.Object);
+        PlanService service = MockPlanService();
+
+        PostPrintPlanDto postQuery = new PostPrintPlanDto()
+        {
+            PrinterId = 1,
+            PrintModelId = 1,
+            Quantity = 1
+        };
+
+        try
+        {
+            service.Plan(postQuery);
+        }
+        catch (NoAvailableSpoolsException noAvailableSpoolsException)
+        {
+            Assert.Pass();
+        }
+        
+        Assert.Fail();
+    }
+    
+    /// <summary>
+    /// L'utilisateur tente d'imprimer un modèle qui n'éxiste pas
+    /// </summary>
+    [Test]
+    public void Hyp7_NoModel()
+    {
+        var printModels = new List<PrintModel>().AsQueryable();
+        
+        var printModelsSet = new Mock<DbSet<PrintModel>>();
+        printModelsSet.As<IQueryable<PrintModel>>().Setup(m => m.Provider).Returns(printModels.Provider);
+        printModelsSet.As<IQueryable<PrintModel>>().Setup(m => m.Expression).Returns(printModels.Expression);
+        printModelsSet.As<IQueryable<PrintModel>>().Setup(m => m.ElementType).Returns(printModels.ElementType);
+        printModelsSet.As<IQueryable<PrintModel>>().Setup(m => m.GetEnumerator()).Returns(() => printModels.GetEnumerator());
+        
+        var spools = new List<FilamentSpool>().AsQueryable();
+
+        var spoolsSet = new Mock<DbSet<FilamentSpool>>();
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.Provider).Returns(spools.Provider);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.Expression).Returns(spools.Expression);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.ElementType).Returns(spools.ElementType);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.GetEnumerator()).Returns(() => spools.GetEnumerator());
+        
+        _mockContext.Setup(c => c.FilamentSpools).Returns(spoolsSet.Object);
+        _mockContext.Setup(c => c.PrintModels).Returns(printModelsSet.Object);
+        PlanService service = MockPlanService();
+
+        PostPrintPlanDto postQuery = new PostPrintPlanDto()
+        {
+            PrinterId = 1,
+            PrintModelId = 1,
+            Quantity = 1
+        };
+
+        try
+        {
+            service.Plan(postQuery);
+        }
+        catch (PrintModelNotFoundException notFoundException)
         {
             Assert.Pass();
         }
