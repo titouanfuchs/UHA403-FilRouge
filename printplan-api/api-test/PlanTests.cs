@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using printplan_api.Contexts;
 using printplan_api.Models.Core;
 using printplan_api.Models.DTO;
+using printplan_api.Models.DTO.Exceptions;
 using printplan_api.Services;
 
 namespace api_test;
@@ -270,6 +272,59 @@ public class PlanTests
         PrintPlanDto result = service.Plan(postQuery);
         
         if (result.PrintQuantity < result.InitialPrintQuantity && result.SpoolReplacementEvents.Count > 1) Assert.Pass();
+        
+        Assert.Fail();
+    }
+
+    [Test]
+    public void Hyp5_NoPrinter()
+    {
+        var spools = new List<FilamentSpool>
+        {
+            new FilamentSpool()
+            {
+                Name = "Filament classique court",
+                Lenght = 500,
+                Color = "Black",
+                Id = 1,
+                Quantity = 1
+            }
+        }.AsQueryable();
+
+        var spoolsSet = new Mock<DbSet<FilamentSpool>>();
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.Provider).Returns(spools.Provider);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.Expression).Returns(spools.Expression);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.ElementType).Returns(spools.ElementType);
+        spoolsSet.As<IQueryable<FilamentSpool>>().Setup(m => m.GetEnumerator()).Returns(() => spools.GetEnumerator());
+        
+        
+        var printers = new List<Printer>().AsQueryable();
+
+        var printersSet = new Mock<DbSet<Printer>>();
+        printersSet.As<IQueryable<Printer>>().Setup(m => m.Provider).Returns(printers.Provider);
+        printersSet.As<IQueryable<Printer>>().Setup(m => m.Expression).Returns(printers.Expression);
+        printersSet.As<IQueryable<Printer>>().Setup(m => m.ElementType).Returns(printers.ElementType);
+        printersSet.As<IQueryable<Printer>>().Setup(m => m.GetEnumerator()).Returns(() => printers.GetEnumerator());
+        
+        _mockContext.Setup(c => c.FilamentSpools).Returns(spoolsSet.Object);
+        _mockContext.Setup(c => c.Printers).Returns(printersSet.Object);
+        PlanService service = MockPlanService();
+
+        PostPrintPlanDto postQuery = new PostPrintPlanDto()
+        {
+            PrinterId = 1,
+            PrintModelId = 1,
+            Quantity = 1
+        };
+
+        try
+        {
+            service.Plan(postQuery);
+        }
+        catch (PrinterNotFoundException printerNotFoundException)
+        {
+            Assert.Pass();
+        }
         
         Assert.Fail();
     }
