@@ -23,7 +23,7 @@ build test:
 
 
 
-pages:
+Production:
   image: alpine:latest
   stage: deploy
   before_script:
@@ -35,6 +35,7 @@ pages:
   - ssh-keyscan $VM_IPADDRESS >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
   script:
+    - ssh $SSH_USER:$SSH_PASS@$VM_IPADDRESS "hostname"
     - scp -r . $SSH_USER:$SSH_PASS@$VM_IPADDRESS -P 68:/fil_rouge
     - ssh $SSH_USER:$SSH_PASS@$VM_IPADDRESS -p 68 "cd /fil_rouge && docker compose -f docker-compose.yaml up --build -d"
   artifacts:
