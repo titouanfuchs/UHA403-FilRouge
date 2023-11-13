@@ -21,21 +21,15 @@ build test:
     - main
     - develop
 
-
-
-Production:
+production:
   image: alpine:latest
   stage: deploy
   before_script:
   - apk add --update sshpass openssh
   script:
     - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 -o "StrictHostKeyChecking=no" "hostname"
-    - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "rm -r ~/fil_rouge"
     - sshpass -p $SSH_PASS scp -r . scp://$SSH_USER@$VM_IPADDRESS:68/fil_rouge
-    - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "cd ~/fil_rouge && docker compose -f docker-compose.yaml up --build -d"
-  artifacts:
-    paths:
-    - public
+    - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "cd ~/fil_rouge && docker compose down --remove-orphans && docker compose -f docker-compose.yaml up --build -d"
   only:
   - main
 
