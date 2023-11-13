@@ -23,24 +23,23 @@ build test:
 
 
 
-#pages:
-#  image: alpine:latest
-#  stage: deploy
-#  before_script:
-#  - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )' 
-#  - eval $(ssh-agent -s)
-#  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-#  - mkdir -p ~/.ssh
-#  - chmod 700 ~/.ssh
-#  - ssh-keyscan $VM_IPADDRESS >> ~/.ssh/known_hosts
-#  - chmod 644 ~/.ssh/known_hosts
-#  script:
-#  - ssh $SSH_USER@$VM_IPADDRESS "hostname"
-#  - scp -r . $SSH_USER@$VM_IPADDRESS:/root/fil_rouge
-#  - ssh $SSH_USER@$VM_IPADDRESS "cd /root/fil_rouge && docker compose -f docker-compose-prod.yml up --build -d"
-#  artifacts:
-#    paths:
-#    - public
-#  only:
-#  - main
+pages:
+  image: alpine:latest
+  stage: deploy
+  before_script:
+  - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )' 
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PUBLIC_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan $VM_IPADDRESS >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+  script:
+    - scp -r . $SSH_USER:$SSH_PASS@$VM_IPADDRESS -p 68: ./fil_rouge
+    - ssh $SSH_USER:$SSH_PASS@$VM_IPADDRESS -p 68 "cd ./fil_rouge && docker compose -f docker-compose.yaml up --build -d"
+  artifacts:
+    paths:
+    - public
+  only:
+  - main
 
