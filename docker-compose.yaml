@@ -12,6 +12,8 @@ services:
             - ./printplan-api:/app
             - /app/bin
             - /app/obj
+            - /app/api/bin
+            - /app/api/obj
             - ./bin:/test-bin
             - ./obj:/test-obj
         depends_on:
