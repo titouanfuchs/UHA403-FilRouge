@@ -17,6 +17,7 @@ services:
         depends_on:
             - printplan-bdd
         networks:
+            - net
             - intern
         ports:
             - ${PORT_SERVICE}:80
@@ -24,6 +25,9 @@ services:
             TARGET: ${TARGET}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            VIRTUAL_PORT: 80
+            VIRTUAL_HOST: uha.titouanfuchs.fr
+            LETSENCRYPT_HOST: uha.titouanfuchs.fr
 
     printplan-bdd:
         container_name: printplan-bdd
@@ -58,5 +62,7 @@ volumes:
     pgadmin:
     printplan-bdd:
 networks:
+    net:
+      external: true
     intern:
         external: false
