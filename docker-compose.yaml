@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+    printplan-service:
+        container_name: printplan-service
+        build:
+          dockerfile: Dockerfile
+          context: printplan-api
+          target: ${TARGET}
+        restart: on-failure
+        volumes:
+            - ./printplan-api:/app
+            - /app/bin
+            - /app/obj
+            - ./bin:/test-bin
+            - ./obj:/test-obj
+        depends_on:
+            - printplan-bdd
+        networks:
+            - intern
+        ports:
+            - ${PORT_SERVICE}:80
+        environment:
+            TARGET: ${TARGET}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    printplan-bdd:
+        container_name: printplan-bdd
+        image: postgres
+        restart: always
+        volumes:
+            - printplan-bdd:/var/lib/postgresql/data
+        networks:
+            - intern
+        environment:
+            POSTGRES_PORT: 5432
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            TZ: Europe/Paris
+
+    printplan-pgadmin:
+      container_name: printplan-pgadmin
+      image: dpage/pgadmin4
+      environment:
+        PGADMIN_DEFAULT_EMAIL: admin@admin.fr
+        PGADMIN_DEFAULT_PASSWORD: admin
+        PGADMIN_LISTEN_PORT: 80
+      ports:
+        - ${PORT_PGADMIN}:80
+      volumes:
+        - pgadmin:/var/lib/pgadmin
+      depends_on:
+        - printplan-bdd
+      networks:
+        - intern
+volumes:
+    pgadmin:
+    printplan-bdd:
+networks:
+    intern:
+        external: false
