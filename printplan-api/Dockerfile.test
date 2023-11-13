@@ -8,11 +8,9 @@ COPY . /app
 
 RUN dotnet restore
 
-RUN dotnet test "./api-test/api-test.csproj"
-
 #////////////////////////////////////////////////////////
 
 FROM base AS test
 WORKDIR /app
 
-ENTRYPOINT ["dotnet", "test", "./api-test/api-test.csproj"]
+RUN dotnet test "./api-test/api-test.csproj"
