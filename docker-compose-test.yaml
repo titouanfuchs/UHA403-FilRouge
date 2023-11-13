@@ -6,7 +6,7 @@ services:
         build:
           dockerfile: Dockerfile.test
           context: printplan-api
-          target: ${TARGET}
+          target: test
         restart: on-failure
         volumes:
             - ./printplan-api:/app
