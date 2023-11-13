@@ -32,12 +32,13 @@ Production:
   - echo "$SSH_PUBLIC_KEY" | tr -d '\r' | ssh-add -
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\t StrictHostKeyChecking no \n\n" > ~/.ssh/config' 
   - ssh-keyscan $VM_IPADDRESS >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
   script:
     - ssh $SSH_USER@$VM_IPADDRESS "hostname"
     - scp -r . $SSH_USER@$VM_IPADDRESS -P 68:/fil_rouge
-    - ssh $SSH_USER@$VM_IPADDRESS -p 68 "cd /fil_rouge && docker compose -f docker-compose.yaml up --build -d"
+    - ssh $SSH_USER@$VM_IPADDRESS -o StrictHostKeyChecking=no -p 68 "cd /fil_rouge && docker compose -f docker-compose.yaml up --build -d"
   artifacts:
     paths:
     - public
