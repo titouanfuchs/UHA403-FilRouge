@@ -30,8 +30,8 @@ Production:
   - apk add --update sshpass openssh
   script:
     - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 -o "StrictHostKeyChecking=no" "hostname"
-    - sshpass -p $SSH_PASS scp -r . scp://$SSH_USER@$VM_IPADDRESS:68
-    - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "cd /fil_rouge && docker compose -f docker-compose.yaml up --build -d"
+    - sshpass -p $SSH_PASS scp -r . scp://$SSH_USER@$VM_IPADDRESS:68/projects/fil_rouge
+    - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "cd /projects/fil_rouge && docker compose -f docker-compose.yaml up --build -d"
   artifacts:
     paths:
     - public
