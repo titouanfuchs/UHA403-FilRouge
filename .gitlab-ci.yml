@@ -22,7 +22,7 @@ tests:
     - docker:dind
   script:
     - docker-compose -f docker-compose-test.yaml up --build # Execution des tests
-  need:
+  needs:
     - job: build
   only: #Exécuté au push sur main et develop
     - develop
@@ -39,5 +39,5 @@ production:
     - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "cd ~/fil_rouge && docker compose -f docker-compose.yaml up --build -d" # Lancement du docker
   only:
     - main # Exécuté uniquement au push ou merge sur main
-  need:
+  needs:
     - job: tests
