@@ -11,18 +11,22 @@ build:
     - docker:dind #Pour faire fonctionner Docker dans Docker
   script:
       - docker-compose build # Execution du build
-  only:
-      - develop #Exécuté uniquement au push  et merge sur Develop
+  only: #Exécuté au push sur main et develop
+      - develop 
+      - main
   
-test:
+tests:
   stage: tests
   image: tmaier/docker-compose:latest
   services:
     - docker:dind
   script:
     - docker-compose -f docker-compose-test.yaml up --build # Execution des tests
-  only:
+  need:
+    - job: build
+  only: #Exécuté au push sur main et develop
     - develop
+    - main
 
 production:
   image: alpine:latest # Image légère de Linux
@@ -35,3 +39,5 @@ production:
     - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "cd ~/fil_rouge && docker compose -f docker-compose.yaml up --build -d" # Lancement du docker
   only:
     - main # Exécuté uniquement au push ou merge sur main
+  need:
+    - job: tests
