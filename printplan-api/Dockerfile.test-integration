@@ -1,0 +1,16 @@
+#////////////////////////////////////////////////////////
+
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
+WORKDIR /app
+EXPOSE 80
+
+COPY . /app
+
+RUN dotnet restore
+
+#////////////////////////////////////////////////////////
+
+FROM base AS test
+WORKDIR /app
+
+RUN dotnet test "./api-integration-tests/api-integration-tests.csproj"
