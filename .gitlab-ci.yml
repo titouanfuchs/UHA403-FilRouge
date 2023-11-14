@@ -33,5 +33,5 @@ production:
     - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 -o "StrictHostKeyChecking=no" "hostname" #Pour permettre la connexion en SSH au serveur de prod
     - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "~/deploy.sh" # Script permettant le déploiement
     - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "cd ~/fil_rouge && docker compose -f docker-compose.yaml up --build -d" # Lancement du docker
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"' # Exécuté uniquement au merge sur main
+  only:
+    - main # Exécuté uniquement au push ou merge sur main
