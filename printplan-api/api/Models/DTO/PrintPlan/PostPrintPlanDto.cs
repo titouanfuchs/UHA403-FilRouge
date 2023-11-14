@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using printplan_api.Models.Core;
 
 namespace printplan_api.Models.DTO;
 
@@ -24,5 +25,12 @@ public struct PostPrintPlanDto
 
     public PostPrintPlanDto()
     {
+    }
+
+    public PostPrintPlanDto(PrintingSlot slot)
+    {
+        PrinterId = 1;
+        Quantity = slot.Quantity;
+        PrintModelId = slot.CurrentModel.Id;
     }
 }

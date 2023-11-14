@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using printplan_api.Contexts;
 using printplan_api.Models.Core;
 using printplan_api.Models.Core.Filament;
@@ -17,6 +18,19 @@ public class PlanService
         _logger = logger;
     }
 
+    public List<PrintPlanDto> GetPlans()
+    {
+        List<PrintPlanDto> plans = new List<PrintPlanDto>();
+        List<PrintingSlot> slots = _context.PrintingSlots.Include(s => s.CurrentModel).ToList();
+        
+        foreach (PrintingSlot slot in slots)
+        {
+            plans.Add(Plan(new PostPrintPlanDto(slot)));
+        }
+        
+        return plans;
+    }
+    
     public PrintPlanDto Plan(PostPrintPlanDto input)
     {
         PrintModel? currentModel = GetModel(input.PrintModelId);
@@ -75,6 +89,8 @@ public class PlanService
         };
 
         _context.PrintingSlots.Add(printingSlot);
+
+        _context.SaveChanges();
         
         return new()
         {
