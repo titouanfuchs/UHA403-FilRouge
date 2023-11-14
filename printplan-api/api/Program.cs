@@ -4,6 +4,10 @@ using Microsoft.OpenApi.Models;
 using printplan_api.Contexts;
 using printplan_api.Services;
 
+bool IsRunningFromNUnit = 
+    AppDomain.CurrentDomain.GetAssemblies().Any(
+        a => a.FullName.ToLowerInvariant().StartsWith("xunit"));
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -54,10 +58,15 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
+if (!IsRunningFromNUnit)
 {
-    var dataContext = scope.ServiceProvider.GetRequiredService<PrintPlanContext>();
-    dataContext.Database.Migrate();
+    using (var scope = app.Services.CreateScope())
+    {
+        var dataContext = scope.ServiceProvider.GetRequiredService<PrintPlanContext>();
+        dataContext.Database.Migrate();
+    }   
 }
 
 app.Run();
+
+public partial class Program { }
