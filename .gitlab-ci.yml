@@ -1,35 +1,37 @@
-image: tmaier/docker-compose:latest
+#Définition des stages
+stages:
+  - build #Test de la compilation
+  - tests #Execution des tests
+  - deploy #Depoiement sur le serveur de production
 
-services:
-  - docker:dind
-
-before_script:
-  - docker compose down --remove-orphans
-
-build image:
+build:
   stage: build
+  image: tmaier/docker-compose:latest #Image utilisée pour exécuter le docker compose
+  services:
+    - docker:dind #Pour faire fonctionner Docker dans Docker
   script:
-    - docker-compose build
+      - docker-compose build # Execution du build
   only:
-    - main
-
-build test:
-  stage: test
+      - develop #Exécuté uniquement au push  et merge sur Develop
+  
+test:
+  stage: tests
+  image: tmaier/docker-compose:latest
+  services:
+    - docker:dind
   script:
-    - docker-compose -f docker-compose-test.yaml up --build
+    - docker-compose -f docker-compose-test.yaml up --build # Execution des tests
   only:
-    - main
     - develop
 
 production:
-  image: alpine:latest
+  image: alpine:latest # Image légère de Linux
   stage: deploy
   before_script:
-  - apk add --update sshpass openssh
+  - apk add --update sshpass openssh # Installation des dépendances
   script:
-    - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 -o "StrictHostKeyChecking=no" "hostname"
-    - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "~/deploy.sh"
-    - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "cd ~/fil_rouge && docker compose -f docker-compose.yaml up --build -d"
-  only:
-  - main
-
+    - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 -o "StrictHostKeyChecking=no" "hostname" #Pour permettre la connexion en SSH au serveur de prod
+    - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "~/deploy.sh" # Script permettant le déploiement
+    - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "cd ~/fil_rouge && docker compose -f docker-compose.yaml up --build -d" # Lancement du docker
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"' # Exécuté uniquement au merge sur main
