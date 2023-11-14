@@ -28,8 +28,7 @@ production:
   - apk add --update sshpass openssh
   script:
     - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 -o "StrictHostKeyChecking=no" "hostname"
-    - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "if [ -d ~/fil_rouge ]; then cd ~/fil_rouge && docker compose down --remove-orphans && cd ../ && rm -rf ~/fil_rouge; fi"
-    - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "git clone ssh://git@git.uha4point0.fr:22222/UHA40/fil-rouge-2023/4.0.3/printplan-fil-rouge-titouan-fuchs.git ~/fil_rouge"
+    - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "if [ -d ~/fil_rouge ]; then cd ~/fil_rouge && docker compose down --remove-orphans && git reset --hard && git pull; else git clone ssh://git@git.uha4point0.fr:22222/UHA40/fil-rouge-2023/4.0.3/printplan-fil-rouge-titouan-fuchs.git ~/fil_rouge"
     - sshpass -p $SSH_PASS ssh $SSH_USER@$VM_IPADDRESS -p 68 "cd ~/fil_rouge && docker compose -f docker-compose.yaml up --build -d"
   only:
   - main
