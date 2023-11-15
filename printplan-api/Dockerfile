@@ -26,6 +26,6 @@ WORKDIR /app
 
 RUN dotnet build -c Release -o /build
 
-RUN dotnet publish "/api/printplan-api.csproj" -c Release -o /publish /p:UseAppHost=false
+RUN dotnet publish -c Release -o /publish /p:UseAppHost=false
 
 ENTRYPOINT ["dotnet", "/api/publish/printplan-api.dll"]
