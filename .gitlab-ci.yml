@@ -3,6 +3,7 @@ stages:
   - build #Test de la compilation
   - unit-tests #Execution des tests
   - integration-tests #Execution des tests d'intégration
+  - publish
   - deploy #Depoiement sur le serveur de production
 
 build:
@@ -41,6 +42,27 @@ integration-tests:
   only: #Exécuté au push sur main et develop
     - develop
     - main
+
+publish:
+
+  stage: publish
+
+  image: docker:latest
+
+  only:
+    - main
+
+  services:
+    - docker:dind
+
+  script:
+    - echo "Build application..."
+    - docker build --tag $REGISTRY_USER/printplan:latest .
+    - echo "Login to registry..."
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD
+    - echo "Pushing to registry..."
+    - docker push $REGISTRY_USER/printplan:latest
+    - echo "Application successfully pushed."
 
 
 production:
