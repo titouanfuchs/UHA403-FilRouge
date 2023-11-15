@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+    printplan-service:
+        container_name: printplan-service
+        build:
+          dockerfile: Dockerfile.test-integration
+          context: printplan-api
+          target: test-integration
+        restart: on-failure
+        volumes:
+            - ./printplan-api:/app
+            - /app/bin
+            - /app/obj
+            - ./bin:/test-bin
+            - ./obj:/test-obj
+        networks:
+            - intern
+networks:
+    intern:
+        external: false
