@@ -1,6 +1,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using printplan_api.Models.DTO;
+using printplan_api.Models.DTO.Exceptions;
+using printplan_api.Models.Enums;
 using printplan_api.Services;
 
 namespace printplan_api.Controllers;
@@ -21,12 +23,12 @@ public class PlanController : ControllerBase
     ///     Récupération de toutes les plannifications en base de données
     /// </summary>
     /// <returns>Toutes les Planifications en base de données</returns>
-    /// <response code="200">Retourne l'estimation d'impression à la chaine</response>
+    /// <response code="200">Ok</response>
     [HttpGet]
     [ProducesResponseType(typeof(PrintPlanDto), StatusCodes.Status200OK)]
     public async Task<ActionResult<PrintPlanDto>> GetPlans()
     {
-        return BadRequest(new BaseResponse { Message = "Not Implemented" });
+        return Ok(_planService.GetPlans());
     }
 
     /// <summary>
@@ -41,8 +43,27 @@ public class PlanController : ControllerBase
     [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status400BadRequest)]
     public ActionResult<PrintPlanDto> Plan(PostPrintPlanDto input)
     {
-        PrintPlanDto result = _planService.Plan(input);
-        return StatusCode(201, result);
+        try
+        {
+            PrintPlanDto result = _planService.Plan(input);
+            return StatusCode(201, result);
+        }
+        catch (PrintModelNotFoundException pmnfEx)
+        {
+            return StatusCode(400, new BaseResponse() { Message = pmnfEx.Message, Status = Status.NoModels });
+        }
+        catch (PrinterNotFoundException pnfEx)
+        {
+            return StatusCode(400, new BaseResponse() { Message = pnfEx.Message, Status = Status.NoPrinter });
+        }
+        catch (NoAvailableSpoolsException nasEx)
+        {
+            return StatusCode(400, new BaseResponse() { Message = nasEx.Message, Status = Status.NoSpools });
+        }
+        catch (NotEnoughFilamentException nefEx)
+        {
+            return StatusCode(400, new BaseResponse() { Message = nefEx.Message, Status = Status.NotEnoughFilament });
+        }
     }
 
     /// <summary>

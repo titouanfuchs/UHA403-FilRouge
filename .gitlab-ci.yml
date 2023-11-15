@@ -1,7 +1,8 @@
 #Définition des stages
 stages:
   - build #Test de la compilation
-  - tests #Execution des tests
+  - unit-tests #Execution des tests
+  - integration-tests #Execution des tests d'intégration
   - deploy #Depoiement sur le serveur de production
 
 build:
@@ -15,8 +16,8 @@ build:
       - develop 
       - main
   
-tests:
-  stage: tests
+unit-tests:
+  stage: unit-tests
   image: tmaier/docker-compose:latest
   services:
     - docker:dind
@@ -27,6 +28,20 @@ tests:
   only: #Exécuté au push sur main et develop
     - develop
     - main
+
+integration-tests:
+  stage: integration-tests
+  image: tmaier/docker-compose:latest
+  services:
+    - docker:dind
+  script:
+    - docker-compose -f docker-compose-test-integration.yaml up --build # Execution des tests
+  needs:
+    - job: build
+  only: #Exécuté au push sur main et develop
+    - develop
+    - main
+
 
 production:
   image: alpine:latest # Image légère de Linux
@@ -40,4 +55,5 @@ production:
   only:
     - main # Exécuté uniquement au push ou merge sur main
   needs:
-    - job: tests
+    - job: unit-tests
+    - job: integration-tests

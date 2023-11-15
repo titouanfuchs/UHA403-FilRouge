@@ -58,19 +58,32 @@ public class PrintPlanContext : DbContext
             RequiredFilamentLenght = 1000f
         });
 
-        Random rnd = new Random();
-        
-        for (int i = 0; i < 10; i++)
+        modelBuilder.Entity<FilamentSpool>().HasData(new FilamentSpool()
         {
-            modelBuilder.Entity<FilamentSpool>().HasData(new FilamentSpool()
-            {
-                Id = i + 1,
-                Name = $"Bobine_{i}",
-                Lenght = rnd.Next(100, 1000),
-                Color = "Black",
-                Quantity = rnd.Next(1, 10)
-            });
-        }
+            Id = 1,
+            Name = $"Bobine_Courte",
+            Lenght = 100,
+            Color = "Black",
+            Quantity = 2
+        });
+        
+        modelBuilder.Entity<FilamentSpool>().HasData(new FilamentSpool()
+        {
+            Id = 2,
+            Name = $"Bobine_Moyenne",
+            Lenght = 500,
+            Color = "Black",
+            Quantity = 2
+        });
+        
+        modelBuilder.Entity<FilamentSpool>().HasData(new FilamentSpool()
+        {
+            Id = 3,
+            Name = $"Bobine_Longue",
+            Lenght = 2000,
+            Color = "Black",
+            Quantity = 2
+        });
 
         #endregion
     }

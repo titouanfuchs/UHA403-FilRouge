@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "printplan-api", "api\printp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api-test", "api-test\api-test.csproj", "{C9F1CD0D-3D5B-4E41-AEBE-11627C3DC78B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api-integration-tests", "api-integration-tests\api-integration-tests.csproj", "{116154CB-7E4A-40A2-8CC7-D2767C2837A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{C9F1CD0D-3D5B-4E41-AEBE-11627C3DC78B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9F1CD0D-3D5B-4E41-AEBE-11627C3DC78B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9F1CD0D-3D5B-4E41-AEBE-11627C3DC78B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{116154CB-7E4A-40A2-8CC7-D2767C2837A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{116154CB-7E4A-40A2-8CC7-D2767C2837A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{116154CB-7E4A-40A2-8CC7-D2767C2837A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{116154CB-7E4A-40A2-8CC7-D2767C2837A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
