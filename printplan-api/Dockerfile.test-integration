@@ -10,7 +10,7 @@ RUN dotnet restore
 
 #////////////////////////////////////////////////////////
 
-FROM base AS test
+FROM base AS test-integration
 WORKDIR /app
 
 RUN dotnet test "./api-integration-tests/api-integration-tests.csproj"

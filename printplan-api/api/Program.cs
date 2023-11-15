@@ -16,6 +16,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddTransient<PrinterService>();
 builder.Services.AddTransient<PlanService>();
+builder.Services.AddTransient<SpoolsService>();
 
 builder.Services.AddDbContext<PrintPlanContext>(options =>
 {

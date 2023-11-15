@@ -1,6 +1,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using printplan_api.Models.DTO;
+using printplan_api.Models.DTO.Exceptions;
+using printplan_api.Models.Enums;
 using printplan_api.Services;
 
 namespace printplan_api.Controllers;
@@ -46,9 +48,21 @@ public class PlanController : ControllerBase
             PrintPlanDto result = _planService.Plan(input);
             return StatusCode(201, result);
         }
-        catch (Exception e)
+        catch (PrintModelNotFoundException pmnfEx)
         {
-            return StatusCode(400, new BaseResponse() { Message = e.Message });
+            return StatusCode(400, new BaseResponse() { Message = pmnfEx.Message, Status = Status.NoModels });
+        }
+        catch (PrinterNotFoundException pnfEx)
+        {
+            return StatusCode(400, new BaseResponse() { Message = pnfEx.Message, Status = Status.NoPrinter });
+        }
+        catch (NoAvailableSpoolsException nasEx)
+        {
+            return StatusCode(400, new BaseResponse() { Message = nasEx.Message, Status = Status.NoSpools });
+        }
+        catch (NotEnoughFilamentException nefEx)
+        {
+            return StatusCode(400, new BaseResponse() { Message = nefEx.Message, Status = Status.NotEnoughFilament });
         }
     }
 
