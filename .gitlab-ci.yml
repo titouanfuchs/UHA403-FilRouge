@@ -57,13 +57,17 @@ publish:
 
   script:
     - echo "Build application..."
-    - docker build --tag $REGISTRY_USER/printplan:latest .
+    - cd printplan-api
+    - docker build --tag $REGISTRY_USER/printplan:latest --file Dockerfile .
     - echo "Login to registry..."
     - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD
     - echo "Pushing to registry..."
     - docker push $REGISTRY_USER/printplan:latest
     - echo "Application successfully pushed."
 
+  needs:
+    - job: unit-tests
+    - job: integration-tests
 
 production:
   image: alpine:latest # Image légère de Linux
