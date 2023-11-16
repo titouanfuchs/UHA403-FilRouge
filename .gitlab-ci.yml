@@ -44,27 +44,21 @@ integration-tests:
     - main
 
 publish:
-
   stage: publish
-
   image: docker:latest
-
   only:
     - main
-
   services:
     - docker:dind
-
   script:
     - echo "Build application..."
-    - cd printplan-api
-    - docker build --tag $REGISTRY_USER/printplan:latest --file Dockerfile .
+    - cd printplan-api #Accès au dossier du projet
+    - docker build --tag $REGISTRY_USER/printplan:latest --file Dockerfile . #Build de l'image de l'api
     - echo "Login to registry..."
-    - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD #Login au Registry docker hub
     - echo "Pushing to registry..."
-    - docker push $REGISTRY_USER/printplan:latest
+    - docker push $REGISTRY_USER/printplan:latest #Push sur le registry
     - echo "Application successfully pushed."
-
   needs:
     - job: unit-tests
     - job: integration-tests
