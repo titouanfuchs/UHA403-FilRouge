@@ -1,16 +1,17 @@
 #////////////////////////////////////////////////////////
 
+# Mise en place des bases du conteneur en utilisant DotNet SDK 7.0
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
-WORKDIR /app
-EXPOSE 80
+WORKDIR /app #Dossier de travail
 
-COPY . /app
+COPY . /app # On Copie l'intégralité du projet
 
-RUN dotnet restore
+RUN dotnet restore # on restore toutes les dépendances du projet 
 
 #////////////////////////////////////////////////////////
 
 FROM base AS test-integration
 WORKDIR /app
 
+# On éxécute les tests d'intégration
 RUN dotnet test "./api-integration-tests/api-integration-tests.csproj"
