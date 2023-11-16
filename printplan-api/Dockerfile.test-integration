@@ -2,11 +2,14 @@
 
 # Mise en place des bases du conteneur en utilisant DotNet SDK 7.0
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
-WORKDIR /app #Dossier de travail
+#Dossier de travail
+WORKDIR /app 
 
-COPY . /app # On Copie l'intégralité du projet
+# On Copie l'intégralité du projet
+COPY . /app 
 
-RUN dotnet restore # on restore toutes les dépendances du projet 
+# on restore toutes les dépendances du projet 
+RUN dotnet restore
 
 #////////////////////////////////////////////////////////
 
