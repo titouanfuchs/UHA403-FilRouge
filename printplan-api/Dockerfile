@@ -1,29 +1,40 @@
 #////////////////////////////////////////////////////////
+# Mise en place des bases du conteneur en utilisant DotNet SDK 7.0
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
+# Dossier de travail
+WORKDIR /app
+# On expose le port de l'API
+EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base # Mise en place des bases du conteneur en utilisant DotNet SDK 7.0
-WORKDIR /app # Dossier de travail
-EXPOSE 80 # On expose le port de l'API
+# On Transfert la totalité du projet dans le l'espace de Travail
+COPY . /app 
 
-COPY . /app # On Transfert la totalité du projet dans le l'espace de Travail
-
-RUN dotnet restore # On installe toutes les dépendances du projet
+# On installe toutes les dépendances du projet
+RUN dotnet restore
 
 #////////////////////////////////////////////////////////
 
-FROM base AS dev # Mode de développement
+# Mode de développement
+FROM base AS dev 
 WORKDIR /app
 
-RUN dotnet dev-certs https # On applique des certificats HTTPS pour l'api
+# On applique des certificats HTTPS pour l'api
+RUN dotnet dev-certs https
 
-ENTRYPOINT ["dotnet", "watch", "run", "--project","./api/printplan-api.csproj", "--urls", "http://0.0.0.0:80"] # On démarre le projet en mode de développement avec prise en charge du Hot Reload
+# On démarre le projet en mode de développement avec prise en charge du Hot Reload
+ENTRYPOINT ["dotnet", "watch", "run", "--project","./api/printplan-api.csproj", "--urls", "http://0.0.0.0:80"]
 
 #////////////////////////////////////////////////////////
 
-FROM base AS prod # Mode de production
+# Mode de production
+FROM base AS prod
 WORKDIR /app
 
-RUN dotnet build -c Release -o /build # On build le projet 
+# On build le projet 
+RUN dotnet build -c Release -o /build
 
-RUN dotnet publish -c Release -o /publish /p:UseAppHost=false # On publie le projet dans un autre dossier
+# On publie le projet dans un autre dossier
+RUN dotnet publish -c Release -o /publish /p:UseAppHost=false
 
-ENTRYPOINT ["dotnet", "/api/publish/printplan-api.dll"] # On démarre le projet en mode de production
+# On démarre le projet en mode de production
+ENTRYPOINT ["dotnet", "/api/publish/printplan-api.dll"]
