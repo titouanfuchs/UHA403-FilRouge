@@ -5,6 +5,7 @@ import {SafeAreaProvider} from "react-native-safe-area-context";
 import React from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {StatusBar} from "expo-status-bar";
+import SpoolView from "./Views/Spools/SpoolsView";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -19,7 +20,7 @@ export default function App() {
                           <MaterialCommunityIcons name="video-3d" color={color} size={26} />
                       )}}
                   />
-                  <Tab.Screen name="Bobines" component={ModelsView} options={{
+                  <Tab.Screen name="Bobines" component={SpoolView} options={{
                       tabBarLabel: 'Bobines',
                       tabBarIcon: ({ color }) => (
                           <MaterialCommunityIcons name="lambda" color={color} size={26} />
