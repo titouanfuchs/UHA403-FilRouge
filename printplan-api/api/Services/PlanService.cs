@@ -88,12 +88,15 @@ public class PlanService
             Quantity = input.Quantity
         };
 
-        _context.PrintingSlots.Add(printingSlot);
+        var saved = _context.PrintingSlots.Add(printingSlot);
 
         _context.SaveChanges();
         
         return new()
         {
+            Id = saved.Entity.Id,
+            Printer = currentPrinter.Id,
+            Model = currentModel.Id,
             SpoolReplacementEvents = replacementEvents,
             InitialPrintQuantity = input.Quantity,
             PrintQuantity = printableQty,

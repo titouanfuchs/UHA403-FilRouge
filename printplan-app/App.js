@@ -7,6 +7,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import {StatusBar} from "expo-status-bar";
 import SpoolView from "./Views/Spools/SpoolsView";
 import PrintersView from "./Views/PrintersView/PrintersView";
+import PlansView from "./Views/PlansView/PlansView";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -31,7 +32,7 @@ export default function App() {
                       tabBarIcon: ({ color }) => (
                           <MaterialCommunityIcons name="printer-3d" color={color} size={26} />
                       )}}/>
-                  <Tab.Screen name="Planifications" component={ModelsView} options={{
+                  <Tab.Screen name="Planifications" component={PlansView} options={{
                       tabBarLabel: 'Planifications',
                       tabBarIcon: ({ color }) => (
                           <MaterialCommunityIcons name="floor-plan" color={color} size={26} />

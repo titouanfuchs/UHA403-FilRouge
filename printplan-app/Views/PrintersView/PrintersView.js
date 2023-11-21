@@ -9,7 +9,50 @@ const printers = [
         name: "Butiful printer",
         printerSpeed: 0.6,
         preheatingDuration: 100
-    }
+    },
+    {
+        id: 2,
+        name: "Butiful printer",
+        printerSpeed: 0.6,
+        preheatingDuration: 100
+    },
+    {
+        id: 3,
+        name: "Butiful printer",
+        printerSpeed: 0.6,
+        preheatingDuration: 100
+    },
+    {
+        id: 4,
+        name: "Butiful printer",
+        printerSpeed: 0.6,
+        preheatingDuration: 100
+    },
+    {
+        id: 5,
+        name: "Butiful printer",
+        printerSpeed: 0.6,
+        preheatingDuration: 100
+    },
+    {
+        id: 6,
+        name: "Butiful printer",
+        printerSpeed: 0.6,
+        preheatingDuration: 100
+    },
+    {
+        id: 7,
+        name: "Butiful printer",
+        printerSpeed: 0.6,
+        preheatingDuration: 100
+    },
+    {
+        id: 8,
+        name: "Butiful printer",
+        printerSpeed: 0.6,
+        preheatingDuration: 100
+    },
+
 ]
 
 export default function PrintersView(){
