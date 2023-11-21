@@ -1,10 +1,11 @@
 import {Button, Pressable, StyleSheet, Text, View} from "react-native";
 
-export default function SpoolComponent({spool}){
+export default function PrinterComponent({printer}){
     return <Pressable style={styles.item}>
         <View style={styles.body}>
-            <Text style={styles.name}>{spool.name}</Text>
-            <Text>Longueur : {spool.length}</Text>
+            <Text style={styles.name}>{printer.name}</Text>
+            <Text>Vitesse d'impression : {printer.printingSpeed}</Text>
+            <Text>Durée de préchauffage : {printer.preheatingDuration}</Text>
         </View>
         <Button style={styles.squareButton} title={"X"} color={"red"}></Button>
     </Pressable>
