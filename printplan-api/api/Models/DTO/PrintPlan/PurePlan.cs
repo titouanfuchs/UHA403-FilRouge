@@ -8,6 +8,12 @@ public class PurePlan
     ///     Quantité de modèle à imprimer
     /// </summary>
     [Required]
+    public int Id { get; set; } = 0;
+    
+    /// <summary>
+    ///     Quantité de modèle à imprimer
+    /// </summary>
+    [Required]
     public int Quantity { get; set; } = 1;
 
     /// <summary>
