@@ -31,6 +31,12 @@ public class PlanController : ControllerBase
         return Ok(_planService.GetPlans());
     }
 
+    [HttpGet("PurePlans")]
+    public async Task<ActionResult<List<PurePlan>>> GetPurePlans()
+    {
+        return Ok(_planService.GetPurePlans());
+    }
+
     /// <summary>
     ///     Créer une planification d'impression
     /// </summary>
