@@ -19,14 +19,18 @@
         const response = await planService.getPlans();
 
         plans = response;
-
-        console.log(plans);
     }
 
 </script>
 
 <page>
     <actionBar title="Planifications">
+        <actionItem
+                position="left"
+                icon="font://&#xf021;"
+                class="fas text-xl"
+                on:tap="{getData}"
+        />
     </actionBar>
     <stackLayout class="p-5">
         {#if plans === undefined}
