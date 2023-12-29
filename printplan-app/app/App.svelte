@@ -1,11 +1,11 @@
 <script lang="ts">
     import PrintersView from "~/views/printers/PrintersView.svelte";
+    import PlansView from "~/views/plans/PlansView.svelte";
 
     let selectedTab: number = 0;
 </script>
 
 <bottomNavigation bind:selectedIndex={selectedTab}>
-
     <!-- The bottom tab UI is created via TabStrip (the containier) and TabStripItem (for each tab)-->
     <tabStrip>
         <tabStripItem>
@@ -25,22 +25,17 @@
     <!-- The number of TabContentItem components should corespond to the number of TabStripItem components -->
     <tabContentItem>
         <frame>
-        <Reports />
-        </frame>
-    </tabContentItem>
-    <tabContentItem>
-        <gridLayout>
-            <label text="Account Page" class="h2 text-center" />
-        </gridLayout>
-    </tabContentItem>
-    <tabContentItem>
-        <frame>
-        <Elements />
+            <PlansView/>
         </frame>
     </tabContentItem>
     <tabContentItem>
         <frame>
-        <Reporters />
+            <PrintersView/>
+        </frame>
+    </tabContentItem>
+    <tabContentItem>
+        <frame>
+            <PrintersView/>
         </frame>
     </tabContentItem>
 

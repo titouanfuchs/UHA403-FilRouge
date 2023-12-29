@@ -6,5 +6,11 @@ purpose of the file is to pass control to the app’s first page.
 
 import { svelteNativeNoFrame } from 'svelte-native'
 import App from './App.svelte'
+import {registerNativeViewElement} from "svelte-native/dom";
+
+registerNativeViewElement("BottomNavigation", () => require("@nativescript-community/ui-material-bottom-navigation").BottomNavigation);
+registerNativeViewElement("TabStrip", () => require("@nativescript-community/ui-material-bottom-navigation").TabStrip);
+registerNativeViewElement("TabStripItem", () => require("@nativescript-community/ui-material-bottom-navigation").TabStripItem);
+registerNativeViewElement("TabContentItem", () => require("@nativescript-community/ui-material-bottom-navigation").TabContentItem);
 
 svelteNativeNoFrame(App, {})

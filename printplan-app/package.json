@@ -4,10 +4,14 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@herefishyfish/nativescript-lokijs-adapter": "^1.0.2",
+    "@herefishyfish/nativescript-rxdb": "^1.0.5",
     "@nativescript-community/ui-material-bottom-navigation": "^7.2.27",
     "@nativescript/core": "~8.6.0",
     "@nativescript/tailwind": "^2.0.1",
     "@nativescript/theme": "~3.0.2",
+    "rxdb": "^15.0.0",
+    "rxjs": "^7.8.1",
     "svelte-native": "~1.0.9",
     "tailwindcss": "^3.4.0"
   },
