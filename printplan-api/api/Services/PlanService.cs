@@ -30,6 +30,23 @@ public class PlanService
         
         return plans;
     }
+
+    public List<PurePlan> GetPurePlans()
+    {
+        List<PurePlan> plans = new List<PurePlan>();
+        List<PrintingSlot> slots = _context.PrintingSlots.Include(s => s.CurrentModel).ToList();
+        
+        foreach (PrintingSlot slot in slots)
+        {
+            plans.Add(new PurePlan()
+            {
+                Quantity = slot.Quantity,
+                PrintModelId = slot.CurrentModel.Id
+            });
+        }
+        
+        return plans;
+    }
     
     public PrintPlanDto Plan(PostPrintPlanDto input)
     {
