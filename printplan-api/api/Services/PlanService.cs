@@ -41,7 +41,8 @@ public class PlanService
             plans.Add(new PurePlan()
             {
                 Quantity = slot.Quantity,
-                PrintModelId = slot.CurrentModel.Id
+                PrintModelId = slot.CurrentModel.Id,
+                Id = slot.Id
             });
         }
         
