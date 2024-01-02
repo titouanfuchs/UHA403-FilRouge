@@ -92,7 +92,7 @@ public class PlanController : ControllerBase
     /// <response code="202">Retourne l'estimation d'impression à la chaine modifiée et à jour</response>
     /// <response code="400">Les données d'entrée sont incorrectes</response>
     /// <response code="404">La planification avec l'id fournis n'éxiste pas</response>
-    [HttpPatch("{id}")]
+    [HttpPatch()]
     [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status202Accepted)]
     [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status400BadRequest)]
