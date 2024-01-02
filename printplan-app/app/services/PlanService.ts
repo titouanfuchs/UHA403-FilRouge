@@ -67,6 +67,8 @@ export default class PlanService{
         if (locPlan === undefined || locPlan === null) {
           console.log(`Adding plan ${plan!.id}`);
           await this.savePlan(plan);
+        }else{
+          await this.updatePlan({id: locPlan.remoteId, quantity: plan.quantity},  true)
         }
       }
 
@@ -204,7 +206,7 @@ export default class PlanService{
           values: JSON.stringify(plan)
         });
       }
-    }else{
+    }else if (!connectionType && !localOnly){
       console.log("Cannot edit remotely -> Storing operation");
 
       await this.localOperationService!.addLocalOperation({
