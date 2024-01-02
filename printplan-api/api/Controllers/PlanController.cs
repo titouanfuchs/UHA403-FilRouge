@@ -30,6 +30,18 @@ public class PlanController : ControllerBase
     {
         return Ok(_planService.GetPlans());
     }
+    
+    /// <summary>
+    ///     Récupération d'une planification
+    /// </summary>
+    /// <returns>Une planification</returns>
+    /// <response code="200">Ok</response>
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(PrintPlanDto), StatusCodes.Status200OK)]
+    public async Task<ActionResult<PrintPlanDto>> GetPlan(int id)
+    {
+        return Ok(_planService.GetPlan(id));
+    }
 
     [HttpGet("PurePlans")]
     public async Task<ActionResult<List<PurePlan>>> GetPurePlans()
