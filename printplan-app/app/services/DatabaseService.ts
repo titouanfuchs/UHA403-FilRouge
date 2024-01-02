@@ -37,8 +37,6 @@ export default class DatabaseService{
          * Do not set lokiJS persistence options like autoload and autosave,
          * RxDB will pick proper defaults based on the given adapter
          */
-        autosave: true,
-        autoload: true
       }),
       multiInstance: false,
       ignoreDuplicate: true,

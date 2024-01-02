@@ -1,6 +1,6 @@
 import {RxDatabase} from "rxdb/src/types";
 import DatabaseService from "~/services/DatabaseService";
-import {FullPlan, LocalOperation, OperationType, Plan} from "~/data/classes";
+import {FullPlan, LocalOperation, OperationType, Plan, PlanEditDTO} from "~/data/classes";
 import {API} from "~/libs/globals";
 import {Connectivity} from "@nativescript/core";
 import {v4} from "@herefishyfish/nativescript-rxdb";
@@ -48,12 +48,10 @@ export default class PlanService{
       for (const plan of webRes) {
         const locOperations: LocalOperation[] = await this.localOperationService!.getOperationsForDocument("Plans", plan.id as number);
         if (locOperations.length > 0){
-
           locOperations.forEach(async (op)=>{
             console.log("Doing local operation " + op.type + " " + op.id);
             await this.localOperationService!.execLocalOperation(op.id!);
           });
-
           continue;
         }
 
@@ -137,15 +135,57 @@ export default class PlanService{
     }
   }
 
-  public async updatePlan(plan: Plan){
+  public async updatePlan(plan: PlanEditDTO, localOnly:boolean = false){
     if (this.database === undefined) await this.getDatabase();
 
-    await this.database.plans.findOne(plan.id!.toString()).update({
-      $set:{
-        quantity: plan.quantity,
-        printModelId: plan.printModelId
+    console.log(plan);
+
+    const connectionType: number = Connectivity.getConnectionType()
+
+    if (connectionType && !localOnly) {
+      const patchMethod = {
+        method: 'PATCH', // Method itself
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8' // Indicates the content
+        },
+        body:JSON.stringify(plan)
       }
-    });
+      let result = await fetch(`${API}/Plan`, patchMethod);
+
+      if (!result.ok){
+        console.log("Cannot edit remotely -> Storing operation");
+        console.log(await result.json());
+
+        await this.localOperationService!.addLocalOperation({
+          document: "Plans",
+          docRemoteId: plan.id,
+          type: OperationType.EDIT,
+          values: JSON.stringify(plan)
+        });
+      }
+    }else{
+      console.log("Cannot edit remotely -> Storing operation");
+
+      await this.localOperationService!.addLocalOperation({
+        document: "Plans",
+        docRemoteId: plan.id,
+        type: OperationType.EDIT,
+        values: JSON.stringify(plan)
+      });
+    }
+
+    try{
+      console.log("Trying edit localy");
+
+      let res = await this.database.plans
+        .findOne({selector: {remoteId: plan.id}}).update({
+          $set:{
+            quantity: plan.quantity,
+          }
+      });
+    }catch (e){
+      console.log("Cannot edit plan");
+    }
   }
 
   public async deletePlan(remoteId: number, localOnly:boolean = false){

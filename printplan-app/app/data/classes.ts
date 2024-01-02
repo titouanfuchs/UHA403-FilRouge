@@ -37,3 +37,7 @@ export interface SpoolReplacementEvent {
   spoolId: number
 }
 
+export interface PlanEditDTO{
+  id: number,
+  quantity: number
+}

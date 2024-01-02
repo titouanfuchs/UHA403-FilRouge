@@ -89,24 +89,38 @@ export default class LocalOperationService{
     const op = await this.getOperation(id);
     let success: boolean = false;
 
+    let result;
+
     switch (op.type){
       case OperationType.ADD:
         break;
       case OperationType.DELETE:
-
+        console.log("Deleting remotely");
         const deleteMethod = {
           method: 'DELETE', // Method itself
           headers: {
             'Content-type': 'application/json; charset=UTF-8' // Indicates the content
           }
         }
-        const result = await fetch(`${API}/Plan/${op.docRemoteId}`, deleteMethod);
+        result = await fetch(`${API}/Plan/${op.docRemoteId}`, deleteMethod);
+
+        success = result.ok;
+        break;
+      case OperationType.EDIT:
+        console.log("Edit remotely");
+
+        const patchMethod = {
+          method: 'PATCH', // Method itself
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8' // Indicates the content
+          },
+          body:{...JSON.parse(op.values!)
+          }
+        }
+        result = await fetch(`${API}/Plan/${op.docRemoteId}`, patchMethod);
 
         success = result.ok;
 
-        console.log("Deleting remotely");
-        break;
-      case OperationType.EDIT:
         break;
     }
 

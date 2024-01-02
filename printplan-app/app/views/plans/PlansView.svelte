@@ -48,6 +48,29 @@
         await showModal({ page: PlanModal, props: {plan: plan}})
     }
 
+    async function editPlan(plan: Plan){
+        Dialogs.prompt({
+            title: 'Edition',
+            message: 'Quantité a imprimer : ',
+            defaultText: plan.quantity.toString(),
+            okButtonText: 'Valider',
+            neutralButtonText: 'Cancel',
+            cancelable: true,
+            // cancelButtonText: 'Cancel',
+            // capitalizationType: 'none',
+            inputType: 'number',
+        }).then(async (result) => {
+            if (!result.result) return;
+
+            await planService.updatePlan({
+                id: plan.remoteId,
+                quantity: Number(result.text)
+            })
+
+            await getData();
+        })
+    }
+
 </script>
 
 <page>
@@ -75,7 +98,7 @@
                             </stackLayout>
                             <flexboxLayout justifyContent="space-between">
                                 <button class="fas aspect-square" text="&#xf002;" on:tap={() => {showPlan(plan.remoteId)}}/>
-                                <button class="fas aspect-square" text="&#xf044;"/>
+                                <button class="fas aspect-square" text="&#xf044;" on:tap={() => editPlan(plan)}/>
                                 <button class="fas bg-red-500 aspect-square" text="&#xf2ed;" on:tap={async () => {await planService.deletePlan(plan.remoteId); await getData()}}/>
                             </flexboxLayout>
                         </stackLayout>
