@@ -75,19 +75,26 @@ public class PlanController : ControllerBase
     /// <summary>
     ///     Modifier les paramètres d'une planification
     /// </summary>
-    /// <param name="id">Identifiant de la planification à modifier</param>
     /// <param name="input">DTO planification</param>
     /// <returns>Estimation d'impression à la chaine</returns>
     /// <response code="202">Retourne l'estimation d'impression à la chaine modifiée et à jour</response>
     /// <response code="400">Les données d'entrée sont incorrectes</response>
     /// <response code="404">La planification avec l'id fournis n'éxiste pas</response>
     [HttpPatch("{id}")]
-    [ProducesResponseType(typeof(PrintPlanDto), StatusCodes.Status202Accepted)]
+    [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status202Accepted)]
     [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<PrintPlanDto>> ModifyPlan(PostPrintPlanDto input, int id)
+    public async Task<ActionResult<BaseResponse>> ModifyPlan(PatchPrintPlanDto input)
     {
-        return BadRequest(new BaseResponse { Message = "Not Implemented" });
+        try
+        {
+            _planService.EditPlan(input);
+            return StatusCode(202, new BaseResponse(){Message = "Plan deleted successfully"});
+        }
+        catch (ArgumentException ex)
+        {
+            return StatusCode(404, new BaseResponse(){Message = ex.Message});
+        }
     }
 
     /// <summary>
@@ -101,6 +108,14 @@ public class PlanController : ControllerBase
     [ProducesResponseType(typeof(BaseResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<BaseResponse>> DeletePlan(int id)
     {
-        return BadRequest(new BaseResponse { Message = "Not Implemented" });
+        try
+        {
+            _planService.DeletePlan(id);
+            return StatusCode(202, new BaseResponse(){Message = "Plan deleted successfully"});
+        }
+        catch (ArgumentException ex)
+        {
+            return StatusCode(404, new BaseResponse(){Message = ex.Message});
+        }
     }
 }
