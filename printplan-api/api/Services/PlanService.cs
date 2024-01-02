@@ -130,9 +130,6 @@ public class PlanService
         replacementEvents = CalcSpoolsReplacements(currentPrinter.PrinterSpeed, currentPrinter.PreheatingDuration,eval.Required, currentSpools);
 
         EntityEntry<PrintingSlot>? saved = null;
-
-        _context.SaveChanges();   
-        
         if (save)
         {
             PrintingSlot printingSlot = new PrintingSlot()
@@ -142,6 +139,7 @@ public class PlanService
             };
 
             saved = _context.PrintingSlots.Add(printingSlot);
+            _context.SaveChanges();
         }
 
         return new()
