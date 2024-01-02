@@ -31,6 +31,34 @@ public class PlanService
         return plans;
     }
 
+    public PrintPlanDto GetPlan(int id)
+    {
+        PrintingSlot? slot = _context.PrintingSlots.Include(s => s.CurrentModel).Where(s => s.Id == id).FirstOrDefault();
+
+        if (slot is null) throw new ArgumentException($"Slot with id {id} does not exists");
+
+        return Plan(new PostPrintPlanDto(slot));
+    }
+
+    public void DeletePlan(int id)
+    {
+        PrintingSlot? slot = _context.PrintingSlots.Include(s => s.CurrentModel).Where(s => s.Id == id).FirstOrDefault();
+        if (slot is null) throw new ArgumentException($"Slot with id {id} does not exists");
+
+        _context.PrintingSlots.Remove(slot);
+        _context.SaveChanges();
+    }
+
+    public void EditPlan(PatchPrintPlanDto input)
+    {
+        PrintingSlot? slot = _context.PrintingSlots.Include(s => s.CurrentModel).Where(s => s.Id == input.Id).FirstOrDefault();
+        if (slot is null) throw new ArgumentException($"Slot with id {input.Id} does not exists");
+
+        slot.Quantity = input.Quantity ?? slot.Quantity;
+
+        _context.SaveChanges();
+    }
+
     public List<PurePlan> GetPurePlans()
     {
         List<PurePlan> plans = new List<PurePlan>();
