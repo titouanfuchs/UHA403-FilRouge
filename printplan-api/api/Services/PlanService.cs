@@ -37,7 +37,7 @@ public class PlanService
 
         if (slot is null) throw new ArgumentException($"Slot with id {id} does not exists");
 
-        return Plan(new PostPrintPlanDto(slot));
+        return Plan(new PostPrintPlanDto(slot), false);
     }
 
     public void DeletePlan(int id)
@@ -77,7 +77,7 @@ public class PlanService
         return plans;
     }
     
-    public PrintPlanDto Plan(PostPrintPlanDto input)
+    public PrintPlanDto Plan(PostPrintPlanDto input, bool save = true)
     {
         PrintModel? currentModel = GetModel(input.PrintModelId);
         Printer? currentPrinter = GetPrinter(input.PrinterId);
@@ -128,15 +128,18 @@ public class PlanService
         printDuration = CalcPrintingDuration(eval.Required, currentPrinter.PrinterSpeed, currentPrinter.PreheatingDuration);
         replacementEvents = CalcSpoolsReplacements(currentPrinter.PrinterSpeed, currentPrinter.PreheatingDuration,eval.Required, currentSpools);
 
-        PrintingSlot printingSlot = new PrintingSlot()
+        if (save)
         {
-            CurrentModel = currentModel,
-            Quantity = input.Quantity
-        };
+            PrintingSlot printingSlot = new PrintingSlot()
+            {
+                CurrentModel = currentModel,
+                Quantity = input.Quantity
+            };
 
-        _context.PrintingSlots.Add(printingSlot);
+            _context.PrintingSlots.Add(printingSlot);
 
-        _context.SaveChanges();
+            _context.SaveChanges();   
+        }
         
         return new()
         {
