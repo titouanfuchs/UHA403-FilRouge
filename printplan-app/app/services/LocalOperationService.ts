@@ -114,10 +114,10 @@ export default class LocalOperationService{
           headers: {
             'Content-type': 'application/json; charset=UTF-8' // Indicates the content
           },
-          body:{...JSON.parse(op.values!)
-          }
+          body:JSON.stringify({...JSON.parse(op.values!)
+          })
         }
-        result = await fetch(`${API}/Plan/${op.docRemoteId}`, patchMethod);
+        result = await fetch(`${API}/Plan`, patchMethod);
 
         success = result.ok;
 
