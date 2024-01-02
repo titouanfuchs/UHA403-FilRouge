@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using printplan_api.Contexts;
 using printplan_api.Models.Core;
 using printplan_api.Models.Core.Filament;
@@ -128,6 +129,10 @@ public class PlanService
         printDuration = CalcPrintingDuration(eval.Required, currentPrinter.PrinterSpeed, currentPrinter.PreheatingDuration);
         replacementEvents = CalcSpoolsReplacements(currentPrinter.PrinterSpeed, currentPrinter.PreheatingDuration,eval.Required, currentSpools);
 
+        EntityEntry<PrintingSlot>? saved = null;
+
+        _context.SaveChanges();   
+        
         if (save)
         {
             PrintingSlot printingSlot = new PrintingSlot()
@@ -136,13 +141,14 @@ public class PlanService
                 Quantity = input.Quantity
             };
 
-            _context.PrintingSlots.Add(printingSlot);
-
-            _context.SaveChanges();   
+            saved = _context.PrintingSlots.Add(printingSlot);
         }
-        
+
         return new()
         {
+            Id = saved is not null? saved.Entity.Id : -1,
+            Printer = currentPrinter.Id,
+            Model = currentModel.Id,
             SpoolReplacementEvents = replacementEvents,
             InitialPrintQuantity = input.Quantity,
             PrintQuantity = printableQty,
