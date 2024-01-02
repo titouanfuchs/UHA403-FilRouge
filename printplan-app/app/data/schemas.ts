@@ -8,15 +8,15 @@ interface Schema{
 
 const PlanSchema: Schema = {
   version: 0,
-  primaryKey: 'id',
+  primaryKey: 'localId',
   type: 'object',
   properties: {
-    id:{
+    localId:{
       type: 'string'
     },
-    printerId:{
-      type: 'number',
-      minimum: 0
+    remoteId:{
+      type:'number',
+      minimum:0,
     },
     quantity: {
       type: 'number',
@@ -41,27 +41,23 @@ const LocalOperationSchema: Schema = {
     },
     done: {
       type:'boolean'
+    },          affectedDatabase:{
+      type: 'string'
     },
-    operations: {
-      type: 'array',
-      uniqueItems: true,
-      items:{
-        type: 'object',
-        properties: {
-          affectedDatabase:{
-            type: 'string'
-          },
-          type:{
-            type: 'string'
-          },
-          document:{
-            type: 'string'
-          }
-        }
-      }
+    type:{
+      type: 'string'
+    },
+    document:{
+      type: 'string'
+    },
+    docRemoteId:{
+      type: 'number'
+    },
+    values: {
+      type: 'string'
     }
   },
-  required: ['id', 'operations', 'done']
+  required: ['id', 'operations', 'done', 'document', 'docRemoteId', 'values']
 }
 
 export {PlanSchema, LocalOperationSchema};

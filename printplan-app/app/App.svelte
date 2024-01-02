@@ -10,15 +10,15 @@
     <tabStrip>
         <tabStripItem>
             <label text="Planifications" />
-            <image src="font://&#xf015;" class="fas t-36" />
+            <image src="font://&#xf073;" class="fas text-2xl" />
         </tabStripItem>
         <tabStripItem>
             <label text="Imprimantes" />
-            <image src="font://&#xf007;" class="fas t-36" />
+            <image src="font://&#xf02f;" class="fas text-2xl" />
         </tabStripItem>
         <tabStripItem>
             <label text="Bobines" />
-            <image src="font://&#xf00e;" class="fas t-36" />
+            <image src="font://&#xf00e;" class="fas text-2xl" />
         </tabStripItem>
     </tabStrip>
 

@@ -1,5 +1,6 @@
 import { addRxPlugin, createRxDatabase, lastOfArray } from 'rxdb';
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
+import { RxDBCleanupPlugin } from 'rxdb/plugins/cleanup';
 import {
   getRxStorageLoki
 } from 'rxdb/plugins/storage-lokijs';
@@ -24,6 +25,7 @@ export default class DatabaseService{
     console.log("Initializing Database...");
 
     addRxPlugin(RxDBUpdatePlugin);
+    addRxPlugin(RxDBCleanupPlugin);
 
     let db = await createRxDatabase({
       name: 'database',
@@ -35,6 +37,8 @@ export default class DatabaseService{
          * Do not set lokiJS persistence options like autoload and autosave,
          * RxDB will pick proper defaults based on the given adapter
          */
+        autosave: true,
+        autoload: true
       }),
       multiInstance: false,
       ignoreDuplicate: true,
