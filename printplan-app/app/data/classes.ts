@@ -7,6 +7,12 @@ export interface Plan{
   printModelId: number
 }
 
+export interface CreatePlanDto{
+  printerId: number,
+  quantity: number,
+  printModelId: number
+}
+
 export enum OperationType{
   DELETE = "delete",
   ADD = "add",
@@ -18,7 +24,7 @@ export interface LocalOperation{
   done?: boolean,
   type: OperationType,
   document: string,
-  docRemoteId: number,
+  docRemoteId?: number,
   values?: string
 }
 

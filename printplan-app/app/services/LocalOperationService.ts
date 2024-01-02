@@ -1,6 +1,6 @@
 import {RxDatabase} from "rxdb/src/types";
 import DatabaseService from "~/services/DatabaseService";
-import {LocalOperation, OperationType} from "~/data/classes";
+import {CreatePlanDto, LocalOperation, OperationType} from "~/data/classes";
 import {v4} from "@herefishyfish/nativescript-rxdb";
 import {API} from "~/libs/globals";
 
@@ -36,6 +36,12 @@ export default class LocalOperationService{
     return res.length > 0;
   }
 
+  public async getCreateOperations(): Promise<LocalOperation[]>{
+    if (this.database === undefined) await this.getDatabase();
+
+    return await this.database.localOperations.find({selector:{type: OperationType.ADD, done: false}}).exec();
+  }
+
   public async setOperationStatus(opId: string){
     if (this.database === undefined) await this.getDatabase();
 
@@ -66,7 +72,7 @@ export default class LocalOperationService{
     if (this.database === undefined) await this.getDatabase();
 
     if (locOperation.type === OperationType.DELETE){
-      const ops = await this.getOperationsForDocument(locOperation.document, locOperation.docRemoteId);
+      const ops = await this.getOperationsForDocument(locOperation.document, locOperation.docRemoteId!);
 
       ops.forEach((op) => {
         this.setOperationStatus(op.id!);
@@ -93,6 +99,18 @@ export default class LocalOperationService{
 
     switch (op.type){
       case OperationType.ADD:
+        console.log("Adding remotely");
+        const plan: CreatePlanDto = JSON.parse(op.values!);
+        const postMethod = {
+          method: 'POST', // Method itself
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8' // Indicates the content
+          },
+          body:JSON.stringify(plan)
+        }
+        result = await fetch(`${API}/Plan`, postMethod);
+
+        success = result.ok;
         break;
       case OperationType.DELETE:
         console.log("Deleting remotely");

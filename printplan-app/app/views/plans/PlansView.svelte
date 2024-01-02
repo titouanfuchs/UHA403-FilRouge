@@ -2,10 +2,11 @@
 
     import {onMount} from "svelte";
     import PlanService from "~/services/PlanService";
-    import {Plan} from "~/data/classes";
+    import {CreatePlanDto, Plan} from "~/data/classes";
     import {showModal} from "svelte-native";
     import PlanModal from "~/views/plans/PlanModal.svelte";
     import {Dialogs} from "@nativescript/core";
+    import PlanCreateModal from "~/views/plans/PlanCreateModal.svelte";
 
     const planService: PlanService = PlanService.getInstance() as PlanService;
 
@@ -31,6 +32,12 @@
         const response = await planService.getPlans();
 
         plans = response;
+    }
+
+    async function createPlan(){
+        let result: CreatePlanDto = await showModal({ page: PlanCreateModal});
+        await planService.createPlan(result);
+        await fetch();
     }
 
     async function showPlan(remoteId: number){
@@ -75,6 +82,12 @@
 
 <page>
     <actionBar title="Planifications">
+        <actionItem
+                position="left"
+                icon="font://&#x2b;"
+                class="fas text-xl"
+                on:tap="{createPlan}"
+        />
         <actionItem
                 position="left"
                 icon="font://&#xf021;"

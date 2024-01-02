@@ -1,8 +1,8 @@
 import {RxDatabase} from "rxdb/src/types";
 import DatabaseService from "~/services/DatabaseService";
-import {FullPlan, LocalOperation, OperationType, Plan, PlanEditDTO} from "~/data/classes";
+import {CreatePlanDto, FullPlan, LocalOperation, OperationType, Plan, PlanEditDTO} from "~/data/classes";
 import {API} from "~/libs/globals";
-import {Connectivity} from "@nativescript/core";
+import {Connectivity, Dialogs} from "@nativescript/core";
 import {v4} from "@herefishyfish/nativescript-rxdb";
 import LocalOperationService from "~/services/LocalOperationService";
 
@@ -42,6 +42,13 @@ export default class PlanService{
     const connectionType: number = Connectivity.getConnectionType();
 
     if (connectionType){
+      const createOperations: LocalOperation[] = await this.localOperationService!.getCreateOperations();
+
+      for (const op of createOperations) {
+        console.log("Doing local operation " + op.type + " " + op.id);
+        await this.localOperationService!.execLocalOperation(op.id!);
+      }
+
       const webRes = await this.getDistantPlans();
       console.log("Syncing !");
 
@@ -121,8 +128,44 @@ export default class PlanService{
     return await this.database.plans.find().exec();
   }
 
+  public async createPlan(plan: CreatePlanDto){
+
+    const connectionType: number = Connectivity.getConnectionType()
+
+    if (!connectionType) {
+      await Dialogs.alert({
+        title: 'Alert!',
+        message: 'Impossible de sauvegarder la planification sans liaison internet. La planification sera créer lorsqu\'une connexion sera disponible',
+        okButtonText: 'OK',
+        cancelable: true,
+      })
+
+      await this.localOperationService!.addLocalOperation({
+        type: OperationType.ADD,
+        document: "Plans",
+        values: JSON.stringify(plan)
+      })
+
+      return;
+    }
+
+    const postMethod = {
+      method: 'POST', // Method itself
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8' // Indicates the content
+      },
+      body:JSON.stringify(plan)
+    }
+    let result = await fetch(`${API}/Plan`, postMethod);
+
+    if (!result.ok) {
+      console.log("Cannot create remotely");
+    }
+  }
+
   public async savePlan(plan: Plan){
     if (this.database === undefined) await this.getDatabase();
+
     try{
       await this.database.plans.insert({
         remoteId: plan.id,
@@ -137,8 +180,6 @@ export default class PlanService{
 
   public async updatePlan(plan: PlanEditDTO, localOnly:boolean = false){
     if (this.database === undefined) await this.getDatabase();
-
-    console.log(plan);
 
     const connectionType: number = Connectivity.getConnectionType()
 

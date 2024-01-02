@@ -12,30 +12,12 @@
             <label text="Planifications" />
             <image src="font://&#xf073;" class="fas text-2xl" />
         </tabStripItem>
-        <tabStripItem>
-            <label text="Imprimantes" />
-            <image src="font://&#xf02f;" class="fas text-2xl" />
-        </tabStripItem>
-        <tabStripItem>
-            <label text="Bobines" />
-            <image src="font://&#xf00e;" class="fas text-2xl" />
-        </tabStripItem>
     </tabStrip>
 
     <!-- The number of TabContentItem components should corespond to the number of TabStripItem components -->
     <tabContentItem>
         <frame>
             <PlansView/>
-        </frame>
-    </tabContentItem>
-    <tabContentItem>
-        <frame>
-            <PrintersView/>
-        </frame>
-    </tabContentItem>
-    <tabContentItem>
-        <frame>
-            <PrintersView/>
         </frame>
     </tabContentItem>
 
